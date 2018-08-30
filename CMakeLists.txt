@@ -19,10 +19,10 @@ set(GAME_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/game/include")
 if (WIN32)
     if (${CMAKE_GENERATOR} STREQUAL "Visual Studio 14 2015 Win64")
         set(SDL2_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x64/SDL2.lib;${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x64/SDL2main.lib;
-                            ${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x64/SDL2_image.lib")
+                            ${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x64/SDL2_image.lib;${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x64/SDL2_ttf.lib")
     else()
         set(SDL2_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x86/SDL2.lib;${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x86/SDL2main.lib;
-                            ${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x86/SDL2_image.lib")
+                            ${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x86/SDL2_image.lib;${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x86/SDL2_ttf.lib")
     endif()
 endif (WIN32)
 
@@ -31,6 +31,8 @@ include_directories(${GAME_INCLUDE_DIRS} ${BASE_INCLUDE_DIRS})
 add_executable(RPSGame RPSGame.cpp
                        ./base/config/RPSConfig.cpp
                        ./base/logger/easylogging++.cpp
+                       ./game/src/LTexture.cpp
+                       ./game/src/RenderObjectMenu.cpp
                        ./game/src/RPSEngine.cpp
                        ./game/src/RPSCore.cpp)
 target_link_libraries(RPSGame ${SDL2_LIBRARIES})
@@ -58,21 +60,11 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/RPSLog.conf
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/RPSGame.conf
     DESTINATION ${FILES_DESTINATION_PATH})
 
-file(COPY ${SDL_DLL_ORIGIN_PATH}/SDL2.dll
-    DESTINATION ${FILES_DESTINATION_PATH})
-file(COPY ${SDL_DLL_ORIGIN_PATH}/libjpeg-9.dll
-    DESTINATION ${FILES_DESTINATION_PATH})
-file(COPY ${SDL_DLL_ORIGIN_PATH}/libpng16-16.dll
-    DESTINATION ${FILES_DESTINATION_PATH})
-file(COPY ${SDL_DLL_ORIGIN_PATH}/libtiff-5.dll
-    DESTINATION ${FILES_DESTINATION_PATH})
-file(COPY ${SDL_DLL_ORIGIN_PATH}/libwebp-7.dll
-    DESTINATION ${FILES_DESTINATION_PATH})
-file(COPY ${SDL_DLL_ORIGIN_PATH}/SDL2_image.dll
-    DESTINATION ${FILES_DESTINATION_PATH})
-file(COPY ${SDL_DLL_ORIGIN_PATH}/zlib1.dll
-    DESTINATION ${FILES_DESTINATION_PATH})
+# SDL libs
+file(GLOB PUBLIC_DLLS ${SDL_DLL_ORIGIN_PATH}/*.dll)
+file(COPY ${PUBLIC_DLLS} DESTINATION ${FILES_DESTINATION_PATH})
 
+# Assets
 file (COPY ${CMAKE_CURRENT_LIST_DIR}/game/assets
       DESTINATION ${FILES_DESTINATION_PATH})
 
