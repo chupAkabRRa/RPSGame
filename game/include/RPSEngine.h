@@ -1,6 +1,9 @@
 #ifndef _RPS_ENGINE_H_
 #define _RPS_ENGINE_H_
 
+#include <memory>
+
+#include "IRenderObject.h"
 #include "sdl/SDL.h"
 
 class RPSEngine
@@ -15,14 +18,12 @@ public:
 private:
     bool m_bSDLInitialized = false;
     bool m_bSDLImgInitialized = false;
+    bool m_bTTFInitialized = false;
+
     SDL_Window* m_pWindow;
     SDL_Renderer* m_pRenderer;
 
-    // Assets
-    SDL_Texture* m_pTextureBg;
-
-    SDL_Texture* LoadTexture(const std::string& strPath);
-    //bool LoadResources();
+    std::unique_ptr<IRenderObject> m_pScene;
 };
 
 #endif // _RPS_ENGINE_H_

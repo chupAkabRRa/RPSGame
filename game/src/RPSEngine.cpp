@@ -1,10 +1,13 @@
 #include <string>
 
 #include "RPSEngine.h"
+#include "RenderObjectMenu.h"
+
 #include "logger/easylogging++.h"
 #include "config/RPSConfig.h"
 
 #include "sdl/SDL_image.h"
+#include "sdl/SDL_ttf.h"
 
 RPSEngine::~RPSEngine()
 {
@@ -25,6 +28,11 @@ bool RPSEngine::Initialize()
     {
         m_bSDLInitialized = true;
 
+        if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
+		{
+			LOG(WARNING) << "Linear texture filtering not enabled";
+		} 
+
         // Default window params
         std::string strTitle("RPSGame");
         int width = 640;
@@ -42,7 +50,7 @@ bool RPSEngine::Initialize()
         if (m_pWindow)
         {
             // Create renderer for window
-            m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, SDL_RENDERER_ACCELERATED);
+            m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
             if (m_pRenderer)
             {
                 // Initialize renderer color
@@ -54,16 +62,20 @@ bool RPSEngine::Initialize()
                 {
                     m_bSDLImgInitialized = true;
 
-                    m_pTextureBg = LoadTexture("assets/blue-burst-abstract-bg.png");
-                    if (m_pTextureBg)
+                    // Initialize SDL_ttf
+                    if (TTF_Init() > -1)
                     {
+                        m_bTTFInitialized = true;
                         bRes = true;
+
+                        m_pScene = std::make_unique<RenderObjectMenu>(m_pRenderer);
+                        m_pScene->Initialize();
                     }
                     else
                     {
-                        LOG(ERROR) << "[CRITICAL] Can't load texture for background";
+                        LOG(ERROR) << "[CRITICAL] TTF could not initialize: " << TTF_GetError();
                         bRes = false;
-                    }                    
+                    }
                 }
                 else
                 {
@@ -89,12 +101,6 @@ bool RPSEngine::Initialize()
 
 void RPSEngine::Close()
 {
-    if (m_pTextureBg)
-    {
-        SDL_DestroyTexture(m_pTextureBg);
-        m_pTextureBg = nullptr;
-    }
-
     if (m_pRenderer)
     {
         SDL_DestroyRenderer(m_pRenderer);
@@ -107,44 +113,23 @@ void RPSEngine::Close()
         m_pWindow = nullptr;
     }
 
+    if (m_bTTFInitialized)
+    {
+        TTF_Quit();
+        m_bTTFInitialized = false;
+    }
+
     if (m_bSDLImgInitialized)
     {
         IMG_Quit();
         m_bSDLImgInitialized = false;
     }
-    
+
     if (m_bSDLInitialized)
     {
         SDL_Quit();
         m_bSDLInitialized = false;
     }
-}
-
-SDL_Texture* RPSEngine::LoadTexture(const std::string& strPath)
-{
-    // The final texture
-    SDL_Texture* pTexture = nullptr;
-
-    // Load image at specified path
-    SDL_Surface* pSurface = IMG_Load(strPath.c_str());
-    if (!pSurface)
-    {
-        LOG(ERROR) << "Can't load image " << strPath << ". Error: " << IMG_GetError();
-    }
-    else
-    {
-        // Create texture from surface pixels
-        pTexture = SDL_CreateTextureFromSurface(m_pRenderer, pSurface);
-        if (!pTexture)
-        {
-            LOG(ERROR) << "Can't create texture from " << strPath << ". Error: " << SDL_GetError();
-        }
-
-        // Get rid of old loaded surface
-        SDL_FreeSurface(pSurface);
-    }
-
-    return pTexture;
 }
 
 void RPSEngine::GameLoop()
@@ -163,12 +148,13 @@ void RPSEngine::GameLoop()
         }
 
         // Clear screen
+        SDL_SetRenderDrawColor(m_pRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
         SDL_RenderClear(m_pRenderer);
 
-        // Render texture to screen
-        SDL_RenderCopy(m_pRenderer, m_pTextureBg, NULL, NULL );
-
+        // Render scene
+        m_pScene->Render();
+        
         // Update screen
-        SDL_RenderPresent(m_pRenderer);
+        SDL_RenderPresent(m_pRenderer); 
     }
 }
