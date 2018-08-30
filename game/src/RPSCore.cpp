@@ -1,3 +1,5 @@
+#include <string>
+
 #include "RPSCore.h"
 #include "RPSEngine.h"
 #include "logger/easylogging++.h"

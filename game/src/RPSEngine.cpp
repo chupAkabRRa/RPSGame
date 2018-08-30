@@ -1,3 +1,5 @@
+#include <string>
+
 #include "RPSEngine.h"
 #include "logger/easylogging++.h"
 #include "config/RPSConfig.h"
@@ -41,27 +43,38 @@ bool RPSEngine::Initialize()
         {
             // Create renderer for window
             m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, SDL_RENDERER_ACCELERATED);
-            if (!m_pRenderer)
-            {
-                LOG(ERROR) << "[CRITICAL] Can't create SDL renderer: " <<  SDL_GetError();
-                bRes = false;
-            }
-            else
+            if (m_pRenderer)
             {
                 // Initialize renderer color
                 SDL_SetRenderDrawColor(m_pRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
                 
                 // Initialize PNG loading
                 int imgFlags = IMG_INIT_PNG;
-                if (!(IMG_Init(imgFlags) & imgFlags))
+                if ((IMG_Init(imgFlags) & imgFlags))
+                {
+                    m_bSDLImgInitialized = true;
+
+                    m_pTextureBg = LoadTexture("assets/blue-burst-abstract-bg.png");
+                    if (m_pTextureBg)
+                    {
+                        bRes = true;
+                    }
+                    else
+                    {
+                        LOG(ERROR) << "[CRITICAL] Can't load texture for background";
+                        bRes = false;
+                    }                    
+                }
+                else
                 {
                     LOG(ERROR) << "[CRITICAL] SDL_image could not initialize: " << IMG_GetError();
                     bRes = false;
                 }
-                else
-                {
-                    bRes = true;
-                }
+            }
+            else
+            {
+                LOG(ERROR) << "[CRITICAL] Can't create SDL renderer: " <<  SDL_GetError();
+                bRes = false;
             }
         }
         else
@@ -76,17 +89,62 @@ bool RPSEngine::Initialize()
 
 void RPSEngine::Close()
 {
+    if (m_pTextureBg)
+    {
+        SDL_DestroyTexture(m_pTextureBg);
+        m_pTextureBg = nullptr;
+    }
+
+    if (m_pRenderer)
+    {
+        SDL_DestroyRenderer(m_pRenderer);
+        m_pRenderer = nullptr;
+    }
+
     if (m_pWindow)
     {
         SDL_DestroyWindow(m_pWindow);
         m_pWindow = nullptr;
     }
 
+    if (m_bSDLImgInitialized)
+    {
+        IMG_Quit();
+        m_bSDLImgInitialized = false;
+    }
+    
     if (m_bSDLInitialized)
     {
         SDL_Quit();
         m_bSDLInitialized = false;
     }
+}
+
+SDL_Texture* RPSEngine::LoadTexture(const std::string& strPath)
+{
+    // The final texture
+    SDL_Texture* pTexture = nullptr;
+
+    // Load image at specified path
+    SDL_Surface* pSurface = IMG_Load(strPath.c_str());
+    if (!pSurface)
+    {
+        LOG(ERROR) << "Can't load image " << strPath << ". Error: " << IMG_GetError();
+    }
+    else
+    {
+        // Create texture from surface pixels
+        pTexture = SDL_CreateTextureFromSurface(m_pRenderer, pSurface);
+        if (!pTexture)
+        {
+            LOG(ERROR) << "Can't create texture from " << strPath << ". Error: " << SDL_GetError();
+        }
+
+        // Get rid of old loaded surface
+        SDL_FreeSurface(pSurface);
+    }
+
+    return pTexture;
 }
 
 void RPSEngine::GameLoop()
@@ -103,5 +161,14 @@ void RPSEngine::GameLoop()
                 bQuit = true;
             }
         }
+
+        // Clear screen
+        SDL_RenderClear(m_pRenderer);
+
+        // Render texture to screen
+        SDL_RenderCopy(m_pRenderer, m_pTextureBg, NULL, NULL );
+
+        // Update screen
+        SDL_RenderPresent(m_pRenderer);
     }
 }

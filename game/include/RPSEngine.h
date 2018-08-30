@@ -14,9 +14,14 @@ public:
     void GameLoop();
 private:
     bool m_bSDLInitialized = false;
+    bool m_bSDLImgInitialized = false;
     SDL_Window* m_pWindow;
     SDL_Renderer* m_pRenderer;
-    
+
+    // Assets
+    SDL_Texture* m_pTextureBg;
+
+    SDL_Texture* LoadTexture(const std::string& strPath);
     //bool LoadResources();
 };
 
