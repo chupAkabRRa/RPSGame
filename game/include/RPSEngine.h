@@ -15,8 +15,8 @@ public:
 private:
     bool m_bSDLInitialized = false;
     SDL_Window* m_pWindow;
-    SDL_Surface* m_pWinSurface;
-
+    SDL_Renderer* m_pRenderer;
+    
     //bool LoadResources();
 };
 

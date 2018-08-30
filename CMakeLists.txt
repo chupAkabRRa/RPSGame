@@ -18,9 +18,11 @@ set(GAME_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/game/include")
 # 2) Setting up SDL libraries depending on platform
 if (WIN32)
     if (${CMAKE_GENERATOR} STREQUAL "Visual Studio 14 2015 Win64")
-        set(SDL2_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x64/SDL2.lib;${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x64/SDL2main.lib")
+        set(SDL2_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x64/SDL2.lib;${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x64/SDL2main.lib;
+                            ${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x64/SDL2_image.lib")
     else()
-        set(SDL2_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x86/SDL2.lib;${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x86/SDL2main.lib")
+        set(SDL2_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x86/SDL2.lib;${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x86/SDL2main.lib;
+                            ${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x86/SDL2_image.lib")
     endif()
 endif (WIN32)
 
@@ -43,17 +45,31 @@ endif(WIN32)
 # 4) Don't forget to copy important files
 if (WIN32)
     if (${CMAKE_GENERATOR} STREQUAL "Visual Studio 14 2015 Win64")
-        set(SDL_DLL_ORIGIN_PATH ${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x64/SDL2.dll)
+        set(SDL_DLL_ORIGIN_PATH ${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x64)
         set(FILES_DESTINATION_PATH ${CMAKE_CURRENT_LIST_DIR}/bin/win/x64)
     else()
-        set(SDL_DLL_ORIGIN_PATH ${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x86/SDL2.dll)
+        set(SDL_DLL_ORIGIN_PATH ${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x86)
         set(FILES_DESTINATION_PATH ${CMAKE_CURRENT_LIST_DIR}/bin/win/x86)
     endif()
 endif(WIN32)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/RPSLog.conf
     DESTINATION ${FILES_DESTINATION_PATH})
-file(COPY ${SDL_DLL_ORIGIN_PATH}
-    DESTINATION ${FILES_DESTINATION_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/RPSGame.conf
     DESTINATION ${FILES_DESTINATION_PATH})
+
+file(COPY ${SDL_DLL_ORIGIN_PATH}/SDL2.dll
+    DESTINATION ${FILES_DESTINATION_PATH})
+file(COPY ${SDL_DLL_ORIGIN_PATH}/libjpeg-9.dll
+    DESTINATION ${FILES_DESTINATION_PATH})
+file(COPY ${SDL_DLL_ORIGIN_PATH}/libpng16-16.dll
+    DESTINATION ${FILES_DESTINATION_PATH})
+file(COPY ${SDL_DLL_ORIGIN_PATH}/libtiff-5.dll
+    DESTINATION ${FILES_DESTINATION_PATH})
+file(COPY ${SDL_DLL_ORIGIN_PATH}/libwebp-7.dll
+    DESTINATION ${FILES_DESTINATION_PATH})
+file(COPY ${SDL_DLL_ORIGIN_PATH}/SDL2_image.dll
+    DESTINATION ${FILES_DESTINATION_PATH})
+file(COPY ${SDL_DLL_ORIGIN_PATH}/zlib1.dll
+    DESTINATION ${FILES_DESTINATION_PATH})
+

@@ -2,6 +2,8 @@
 #include "logger/easylogging++.h"
 #include "config/RPSConfig.h"
 
+#include "sdl/SDL_image.h"
+
 RPSEngine::~RPSEngine()
 {
     Close();
@@ -37,8 +39,30 @@ bool RPSEngine::Initialize()
             width, height, SDL_WINDOW_SHOWN);
         if (m_pWindow)
         {
-            m_pWinSurface = SDL_GetWindowSurface(m_pWindow);
-            bRes = true;
+            // Create renderer for window
+            m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, SDL_RENDERER_ACCELERATED);
+            if (!m_pRenderer)
+            {
+                LOG(ERROR) << "[CRITICAL] Can't create SDL renderer: " <<  SDL_GetError();
+                bRes = false;
+            }
+            else
+            {
+                // Initialize renderer color
+                SDL_SetRenderDrawColor(m_pRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+                
+                // Initialize PNG loading
+                int imgFlags = IMG_INIT_PNG;
+                if (!(IMG_Init(imgFlags) & imgFlags))
+                {
+                    LOG(ERROR) << "[CRITICAL] SDL_image could not initialize: " << IMG_GetError();
+                    bRes = false;
+                }
+                else
+                {
+                    bRes = true;
+                }
+            }
         }
         else
         {
