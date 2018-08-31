@@ -14,7 +14,7 @@ RPSEngine::~RPSEngine()
     Close();
 }
 
-bool RPSEngine::Initialize()
+bool RPSEngine::Initialize(IGameState* cb)
 {
     bool bRes = false;
 
@@ -68,7 +68,9 @@ bool RPSEngine::Initialize()
                         m_bTTFInitialized = true;
                         bRes = true;
 
-                        m_pScene = std::make_unique<RenderObjectMenu>(m_pRenderer);
+                        m_pGameStateCb = cb;
+
+                        m_pScene = std::make_unique<RenderObjectMenu>(m_pRenderer, cb);
                         m_pScene->Initialize();
                     }
                     else
@@ -137,13 +139,13 @@ void RPSEngine::GameLoop()
     bool bQuit = false;
     SDL_Event sdlEvent;
 
-    while (!bQuit)
+    while (!m_pGameStateCb->GetQuitState())
     {
         while(SDL_PollEvent(&sdlEvent) != 0)
         {
             if (sdlEvent.type == SDL_QUIT)
             {
-                bQuit = true;
+                m_pGameStateCb->OnQuitApp();
             }
 
             m_pScene->HandleEvent(&sdlEvent);

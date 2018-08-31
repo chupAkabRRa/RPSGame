@@ -20,8 +20,11 @@ public:
     int GetWidth() const;
     int GetHeight() const;
 
-    void SetPos(int x, int y);
+    void SetPos(int x, int y) { m_x = x; m_y = y; }
+    bool IsClicked() const { return m_bIsClicked; }
+    void ClickedReset() { m_bIsClicked = false; }
 
+    // IEventHandler, IRenderObject
     void Render() override;
     bool HandleEvent(SDL_Event* e) override;
 
@@ -29,6 +32,8 @@ private:
     std::string m_strCaption;
     int m_x = 0;
     int m_y = 0;
+    bool m_bIsClicked = false;
+    bool m_bIsMouseBtnDown = false;
 
     std::string m_strOriginalFont;
     int m_iOriginalSize;

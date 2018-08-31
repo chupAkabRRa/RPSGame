@@ -4,6 +4,8 @@
 #include <memory>
 
 #include "IScene.h"
+#include "IGameState.h"
+
 #include "sdl/SDL.h"
 
 class RPSEngine
@@ -12,7 +14,7 @@ public:
     RPSEngine() = default;
     ~RPSEngine();
 
-    bool Initialize();
+    bool Initialize(IGameState* cb);
     void Close();
     void GameLoop();
 private:
@@ -22,6 +24,8 @@ private:
 
     SDL_Window* m_pWindow;
     SDL_Renderer* m_pRenderer;
+
+    IGameState* m_pGameStateCb;
 
     std::unique_ptr<IScene> m_pScene;
 };

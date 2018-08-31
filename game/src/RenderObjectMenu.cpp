@@ -4,8 +4,9 @@
 
 #include "logger/easylogging++.h"
 
-RenderObjectMenu::RenderObjectMenu(SDL_Renderer* pRenderer)
+RenderObjectMenu::RenderObjectMenu(SDL_Renderer* pRenderer, IGameState* cb)
     : m_pRenderer(pRenderer)
+    , m_pGameStateCb(cb)
     , m_strFontName("assets/sea-font.ttf")
 {
 }
@@ -58,10 +59,28 @@ void RenderObjectMenu::Render()
 
 bool RenderObjectMenu::HandleEvent(SDL_Event* e)
 {
-    for (auto& i : m_vButtons)
+    for (std::size_t i = 0; i < m_vButtons.size(); i++)
     {
-        i->HandleEvent(e);
+        m_vButtons[i]->HandleEvent(e);
+
+        if (m_vButtons[i]->IsClicked())
+        {
+            m_vButtons[i]->ClickedReset();
+
+            switch (i)
+            {
+            case eButton_SinglePlayer: 
+                break;
+            case eButton_CreateLobby:
+                break;
+            case eButton_JoinLobby:
+                break;
+            case eButton_Exit:
+                m_pGameStateCb->OnQuitApp();
+                break;
+            };
+        }
     }
-    
+
     return true;
 }

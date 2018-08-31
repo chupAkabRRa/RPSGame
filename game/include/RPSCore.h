@@ -3,9 +3,11 @@
 
 #include <memory>
 
+#include "IGameState.h"
+
 class RPSEngine;
 
-class RPSCore
+class RPSCore : public IGameState
 {
 public:
 	RPSCore();
@@ -13,6 +15,10 @@ public:
 
     bool Initialize();
     void Run();
+
+    // IGameState methods
+    void OnSceneChange(IGameState::eScene newScene) override;
+    void OnQuitApp() override;
 
 private:
     std::unique_ptr<RPSEngine> m_pEngine;

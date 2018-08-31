@@ -9,11 +9,21 @@
 RPSCore::RPSCore() = default;
 RPSCore::~RPSCore() = default;
 
+void RPSCore::OnSceneChange(IGameState::eScene newScene)
+{
+    m_currScene = newScene;
+}
+
+void RPSCore::OnQuitApp()
+{
+    m_bQuit = true;
+}
+
 bool RPSCore::Initialize()
 {
     // Initialize render engine
     m_pEngine = std::make_unique<RPSEngine>();
-    if (m_pEngine->Initialize())
+    if (m_pEngine->Initialize(this))
     {
         m_bInitialized = true;
     }

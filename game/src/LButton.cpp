@@ -37,12 +37,6 @@ void LButton::Render()
     LTexture::Render(m_x, m_y);
 }
 
-void LButton::SetPos(int x, int y)
-{
-    m_x = x;
-    m_y = y;
-}
-
 bool LButton::HandleEvent(SDL_Event* e)
 {
     // If mouse event happened
@@ -77,10 +71,28 @@ bool LButton::HandleEvent(SDL_Event* e)
         if (bInside)
         {
             m_Color = {255, 0, 0};
+            
+            if (e->type == SDL_MOUSEBUTTONDOWN)
+            {
+                m_bIsMouseBtnDown = true;
+            }
+            else if (e->type == SDL_MOUSEBUTTONUP)
+            {
+                if (m_bIsMouseBtnDown)
+                {
+                    m_bIsMouseBtnDown = false;
+                    m_bIsClicked = true;
+                }
+            }
         }
         else
         {
             m_Color = {255, 255, 255};
+
+            if (e->type == SDL_MOUSEBUTTONUP && m_bIsMouseBtnDown)
+            {
+                m_bIsMouseBtnDown = false;
+            }
         }
     }
 
