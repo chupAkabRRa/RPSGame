@@ -25,6 +25,7 @@ public:
     void GetPicks(common::ePick& player, common::ePick& enemy) override;
     bool IsRoundFinished() override;
     void OnNewRound() override;
+    void GetScores(int& iPlayerScore, int& iEnemyScore) override;
 
 private:
     std::unique_ptr<RPSEngine> m_pEngine;

@@ -32,6 +32,12 @@ int LButton::GetHeight() const
     return LTexture::GetHeight();
 }
 
+bool LButton::UpdateCaption(const std::string& strNewCaption)
+{
+    m_strCaption = strNewCaption;
+    return LTexture::LoadFromRenderedText(m_strOriginalFont, m_iOriginalSize, m_strCaption, m_Color);
+}
+
 void LButton::Render()
 {
     LTexture::SetColor(m_Color.r, m_Color.g, m_Color.b);

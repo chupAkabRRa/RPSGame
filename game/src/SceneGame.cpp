@@ -86,6 +86,13 @@ void SceneGame::Render()
     {
         SDL_Delay(1000);
         m_pGameStateCb->OnNewRound();
+
+        int iPlayer, iEnemy;
+        m_pGameStateCb->GetScores(iPlayer, iEnemy);
+        std::string strPlayerScore = std::string("You: ") + std::to_string(iPlayer);
+        std::string strEnemyScore = std::string("Enemy: ") + std::to_string(iEnemy);
+        m_vButtons[eButton_You]->UpdateCaption(strPlayerScore);
+        m_vButtons[eButton_Enemy]->UpdateCaption(strEnemyScore);
     }
 
     common::ePick player, enemy;
@@ -128,6 +135,8 @@ bool SceneGame::HandleEvent(SDL_Event* e)
                 m_pGameStateCb->OnPlayerPick(common::ePick::Scissors);
                 break;
             case eButton_BackToMenu:
+                m_vButtons[eButton_You]->UpdateCaption("You: 0");
+                m_vButtons[eButton_Enemy]->UpdateCaption("Enemy: 0");
                 m_pGameStateCb->OnSceneChange(IGameState::eScene::eScene_Menu);
                 break;
             };

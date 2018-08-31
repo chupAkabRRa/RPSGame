@@ -17,6 +17,7 @@ public:
     virtual void OnQuitApp() = 0;
     virtual void OnPlayerPick(common::ePick pick) = 0;
     virtual void GetPicks(common::ePick& player, common::ePick& enemy) = 0;
+    virtual void GetScores(int& iPlayerScore, int& iEnemyScore) = 0;
     virtual bool IsRoundFinished() = 0;
     virtual void OnNewRound() = 0;
     

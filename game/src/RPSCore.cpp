@@ -46,6 +46,11 @@ void RPSCore::OnNewRound()
     m_pGameLogic->NewRound();
 }
 
+void RPSCore::GetScores(int& iPlayerScore, int& iEnemyScore)
+{
+    m_pGameLogic->GetScores(iPlayerScore, iEnemyScore);
+}
+
 bool RPSCore::Initialize()
 {
     // Initialize render engine

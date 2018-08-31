@@ -22,6 +22,7 @@ public:
     void SetPos(int x, int y) { m_x = x; m_y = y; }
     bool IsClicked() const { return m_bIsClicked; }
     void ClickedReset() { m_bIsClicked = false; }
+    bool UpdateCaption(const std::string& strNewCaption);
 
     // IEventHandler, IRenderObject
     bool Initialize() override;
