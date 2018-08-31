@@ -145,6 +145,8 @@ void RPSEngine::GameLoop()
             {
                 bQuit = true;
             }
+
+            m_pScene->HandleEvent(&sdlEvent);
         }
 
         // Clear screen
@@ -153,7 +155,7 @@ void RPSEngine::GameLoop()
 
         // Render scene
         m_pScene->Render();
-        
+
         // Update screen
         SDL_RenderPresent(m_pRenderer); 
     }

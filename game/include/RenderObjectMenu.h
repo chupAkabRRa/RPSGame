@@ -1,23 +1,26 @@
 #ifndef _RENDER_OBJECT_MENU_H_
 #define _RENDER_OBJECT_MENU_H_
 
-#include "IRenderObject.h"
+#include "IScene.h"
 
 #include <memory>
+#include <vector>
 #include <string>
 
 #include "sdl/SDL.h"
 
 class LTexture;
+class LButton;
 
-class RenderObjectMenu : public IRenderObject
+class RenderObjectMenu : public IScene
 {
 public:
     RenderObjectMenu(SDL_Renderer* pRenderer);
     ~RenderObjectMenu();
 
     bool Initialize() override;
-    bool Render() override;
+    void Render() override;
+    bool HandleEvent(SDL_Event* e) override;
 
 private:
     const int m_iFontSize = 32;
@@ -27,10 +30,8 @@ private:
     SDL_Rect m_DrawingRect;
 
     std::unique_ptr<LTexture> m_pTextureBg;
-    std::unique_ptr<LTexture> m_pMenuItemSingle;
-    std::unique_ptr<LTexture> m_pMenuItemCreateLobby;
-    std::unique_ptr<LTexture> m_pMenuItemJoinLobby;
-    std::unique_ptr<LTexture> m_pMenuItemExit;
+    
+    std::vector<std::unique_ptr<LButton>> m_vButtons;
 };
 
 #endif // _RENDER_OBJECT_MENU_H_
