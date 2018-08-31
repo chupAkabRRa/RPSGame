@@ -7,7 +7,7 @@
 SceneMenu::SceneMenu(SDL_Renderer* pRenderer, IGameState* cb)
     : m_pRenderer(pRenderer)
     , m_pGameStateCb(cb)
-    , m_strFontName("assets/sea-font.ttf")
+    , m_strFontName("assets/action-man-bold.ttf")
 {
 }
 
@@ -36,13 +36,13 @@ bool SceneMenu::Initialize()
 
     // Set correct coordinates for buttons
     // "Single Player"
-    m_vButtons[0]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[0]->GetWidth() / 2, 150);
+    m_vButtons[eButton_SinglePlayer]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[0]->GetWidth() / 2, 150);
     // "Create Lobby"
-    m_vButtons[1]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[1]->GetWidth() / 2, 200);
+    m_vButtons[eButton_CreateLobby]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[1]->GetWidth() / 2, 200);
     // "Join Lobby"
-    m_vButtons[2]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[2]->GetWidth() / 2, 250);
+    m_vButtons[eButton_JoinLobby]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[2]->GetWidth() / 2, 250);
     // "Exit"
-    m_vButtons[3]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[3]->GetWidth() / 2, 300);
+    m_vButtons[eButton_Exit]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[3]->GetWidth() / 2, 300);
 
     return true;
 }
