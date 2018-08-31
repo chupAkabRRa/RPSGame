@@ -1,22 +1,22 @@
-#include "RenderObjectMenu.h"
+#include "SceneMenu.h"
 #include "LTexture.h"
 #include "LButton.h"
 
 #include "logger/easylogging++.h"
 
-RenderObjectMenu::RenderObjectMenu(SDL_Renderer* pRenderer, IGameState* cb)
+SceneMenu::SceneMenu(SDL_Renderer* pRenderer, IGameState* cb)
     : m_pRenderer(pRenderer)
     , m_pGameStateCb(cb)
     , m_strFontName("assets/sea-font.ttf")
 {
 }
 
-RenderObjectMenu::~RenderObjectMenu()
+SceneMenu::~SceneMenu()
 {
 
 }
 
-bool RenderObjectMenu::Initialize()
+bool SceneMenu::Initialize()
 {
     SDL_RenderGetViewport(m_pRenderer, &m_DrawingRect);
 
@@ -47,7 +47,7 @@ bool RenderObjectMenu::Initialize()
     return true;
 }
 
-void RenderObjectMenu::Render()
+void SceneMenu::Render()
 {
     m_pTextureBg->Render(0, 0);
 
@@ -57,7 +57,7 @@ void RenderObjectMenu::Render()
     }
 }
 
-bool RenderObjectMenu::HandleEvent(SDL_Event* e)
+bool SceneMenu::HandleEvent(SDL_Event* e)
 {
     for (std::size_t i = 0; i < m_vButtons.size(); i++)
     {

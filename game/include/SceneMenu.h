@@ -1,5 +1,5 @@
-#ifndef _RENDER_OBJECT_MENU_H_
-#define _RENDER_OBJECT_MENU_H_
+#ifndef _SCENE_MENU_H_
+#define _SCENE_MENU_H_
 
 #include "IScene.h"
 #include "IGameState.h"
@@ -13,11 +13,11 @@
 class LTexture;
 class LButton;
 
-class RenderObjectMenu : public IScene
+class SceneMenu : public IScene
 {
 public:
-    RenderObjectMenu(SDL_Renderer* pRenderer, IGameState* cb);
-    ~RenderObjectMenu();
+    SceneMenu(SDL_Renderer* pRenderer, IGameState* cb);
+    ~SceneMenu();
 
     bool Initialize() override;
     void Render() override;
@@ -42,4 +42,4 @@ private:
     std::vector<std::unique_ptr<LButton>> m_vButtons;
 };
 
-#endif // _RENDER_OBJECT_MENU_H_
+#endif // _SCENE_MENU_H_

@@ -1,7 +1,7 @@
 #include <string>
 
 #include "RPSEngine.h"
-#include "RenderObjectMenu.h"
+#include "SceneMenu.h"
 
 #include "logger/easylogging++.h"
 #include "config/RPSConfig.h"
@@ -70,7 +70,7 @@ bool RPSEngine::Initialize(IGameState* cb)
 
                         m_pGameStateCb = cb;
 
-                        m_pScene = std::make_unique<RenderObjectMenu>(m_pRenderer, cb);
+                        m_pScene = std::make_unique<SceneMenu>(m_pRenderer, cb);
                         m_pScene->Initialize();
                     }
                     else

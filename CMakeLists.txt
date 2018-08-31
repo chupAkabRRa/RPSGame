@@ -33,7 +33,7 @@ add_executable(RPSGame RPSGame.cpp
                        ./base/logger/easylogging++.cpp
                        ./game/src/LTexture.cpp
                        ./game/src/LButton.cpp
-                       ./game/src/RenderObjectMenu.cpp
+                       ./game/src/SceneMenu.cpp
                        ./game/src/RPSEngine.cpp
                        ./game/src/RPSCore.cpp)
 target_link_libraries(RPSGame ${SDL2_LIBRARIES})
