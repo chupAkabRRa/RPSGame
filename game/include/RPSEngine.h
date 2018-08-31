@@ -2,6 +2,7 @@
 #define _RPS_ENGINE_H_
 
 #include <memory>
+#include <vector>
 
 #include "IScene.h"
 #include "IGameState.h"
@@ -27,7 +28,7 @@ private:
 
     IGameState* m_pGameStateCb;
 
-    std::unique_ptr<IScene> m_pScene;
+    std::vector<std::unique_ptr<IScene>> m_vScenes;
 };
 
 #endif // _RPS_ENGINE_H_

@@ -2,6 +2,7 @@
 
 #include "RPSEngine.h"
 #include "SceneMenu.h"
+#include "SceneGame.h"
 
 #include "logger/easylogging++.h"
 #include "config/RPSConfig.h"
@@ -70,8 +71,14 @@ bool RPSEngine::Initialize(IGameState* cb)
 
                         m_pGameStateCb = cb;
 
-                        m_pScene = std::make_unique<SceneMenu>(m_pRenderer, cb);
-                        m_pScene->Initialize();
+                        // Load scenes
+                        m_vScenes.push_back(std::make_unique<SceneMenu>(m_pRenderer, cb));
+                        m_vScenes.push_back(std::make_unique<SceneGame>(m_pRenderer, cb));
+
+                        for (auto& i : m_vScenes)
+                        {
+                            i->Initialize();
+                        }
                     }
                     else
                     {
@@ -141,6 +148,8 @@ void RPSEngine::GameLoop()
 
     while (!m_pGameStateCb->GetQuitState())
     {
+        IGameState::eScene iScene = m_pGameStateCb->GetCurrScene();
+
         while(SDL_PollEvent(&sdlEvent) != 0)
         {
             if (sdlEvent.type == SDL_QUIT)
@@ -148,7 +157,7 @@ void RPSEngine::GameLoop()
                 m_pGameStateCb->OnQuitApp();
             }
 
-            m_pScene->HandleEvent(&sdlEvent);
+            m_vScenes[iScene]->HandleEvent(&sdlEvent);
         }
 
         // Clear screen
@@ -156,7 +165,7 @@ void RPSEngine::GameLoop()
         SDL_RenderClear(m_pRenderer);
 
         // Render scene
-        m_pScene->Render();
+        m_vScenes[iScene]->Render();
 
         // Update screen
         SDL_RenderPresent(m_pRenderer); 

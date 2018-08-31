@@ -69,7 +69,8 @@ bool SceneMenu::HandleEvent(SDL_Event* e)
 
             switch (i)
             {
-            case eButton_SinglePlayer: 
+            case eButton_SinglePlayer:
+                m_pGameStateCb->OnSceneChange(IGameState::eScene::eScene_Game);
                 break;
             case eButton_CreateLobby:
                 break;

@@ -4,7 +4,7 @@
 class IGameState
 {
 public:
-    enum class eScene
+    enum eScene
     {
         eScene_Menu = 0,
         eScene_Game = 1,
@@ -18,7 +18,7 @@ public:
     bool GetQuitState() const { return m_bQuit; }
 
 protected:
-    IGameState::eScene m_currScene;
+    IGameState::eScene m_currScene = eScene_Menu;
     bool m_bQuit = false;
 };
 
