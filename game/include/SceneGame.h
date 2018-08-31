@@ -41,6 +41,7 @@ private:
     IGameState* m_pGameStateCb;
 
     std::unique_ptr<LTexture> m_pTextureBg;
+    std::vector<std::unique_ptr<LTexture>> m_vTexturePicks;
     std::vector<std::unique_ptr<LButton>> m_vButtons;
 };
 

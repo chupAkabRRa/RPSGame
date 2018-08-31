@@ -4,8 +4,10 @@
 #include <memory>
 
 #include "IGameState.h"
+#include "GameBot.h"
 
 class RPSEngine;
+class GameLogic;
 
 class RPSCore : public IGameState
 {
@@ -19,10 +21,17 @@ public:
     // IGameState methods
     void OnSceneChange(IGameState::eScene newScene) override;
     void OnQuitApp() override;
+    void OnPlayerPick(common::ePick pick) override;
+    void GetPicks(common::ePick& player, common::ePick& enemy) override;
+    bool IsRoundFinished() override;
+    void OnNewRound() override;
 
 private:
     std::unique_ptr<RPSEngine> m_pEngine;
     bool m_bInitialized = false;
+
+    std::unique_ptr<GameLogic> m_pGameLogic;
+    GameBot m_bot;
 };
 
 #endif // _RPD_CORE_H_

@@ -13,7 +13,6 @@ SceneGame::SceneGame(SDL_Renderer* pRenderer, IGameState* cb)
 
 SceneGame::~SceneGame()
 {
-
 }
 
 bool SceneGame::Initialize()
@@ -22,6 +21,14 @@ bool SceneGame::Initialize()
 
     m_pTextureBg = std::make_unique<LTexture>(m_pRenderer);
     m_pTextureBg->LoadFromFile("assets/blue-burst-abstract-bg.png");
+
+    m_vTexturePicks.push_back(std::make_unique<LTexture>(m_pRenderer));
+    m_vTexturePicks.push_back(std::make_unique<LTexture>(m_pRenderer));
+    m_vTexturePicks.push_back(std::make_unique<LTexture>(m_pRenderer));
+    m_vTexturePicks.push_back(std::make_unique<LTexture>(m_pRenderer));
+    m_vTexturePicks[common::ePick::Rock]->LoadFromFile("assets/rock.png");
+    m_vTexturePicks[common::ePick::Scissors]->LoadFromFile("assets/scissors.png");
+    m_vTexturePicks[common::ePick::Paper]->LoadFromFile("assets/paper.png");
 
     SDL_Color textColor = { 255, 255, 255 };
     m_vButtons.push_back(std::make_unique<LButton>(m_pRenderer, "Rock", m_strFontName, m_iFontSize, textColor));
@@ -74,6 +81,29 @@ void SceneGame::Render()
     {
         i->Render();
     }
+
+    if (m_pGameStateCb->IsRoundFinished())
+    {
+        SDL_Delay(1000);
+        m_pGameStateCb->OnNewRound();
+    }
+
+    common::ePick player, enemy;
+    m_pGameStateCb->GetPicks(player, enemy);
+    if (player != common::ePick::None)
+    {
+        int x, y;
+        x = (m_DrawingRect.w - m_DrawingRect.x) / 4 - m_vTexturePicks[player]->GetWidth() / 2;
+        y = (m_DrawingRect.h - m_DrawingRect.y - 100) / 2 - m_vTexturePicks[player]->GetHeight() / 2;
+        m_vTexturePicks[player]->Render(x, y);
+    }
+    if (enemy != common::ePick::None)
+    {
+        int x, y;
+        x = 3 * (m_DrawingRect.w - m_DrawingRect.x) / 4 - m_vTexturePicks[enemy]->GetWidth() / 2;
+        y = (m_DrawingRect.h - m_DrawingRect.y - 100) / 2 - m_vTexturePicks[enemy]->GetHeight() / 2;
+        m_vTexturePicks[enemy]->Render(x, y);
+    }
 }
 
 bool SceneGame::HandleEvent(SDL_Event* e)
@@ -88,11 +118,14 @@ bool SceneGame::HandleEvent(SDL_Event* e)
 
             switch (i)
             {
-            case eButton_Rock: 
+            case eButton_Rock:
+                m_pGameStateCb->OnPlayerPick(common::ePick::Rock);
                 break;
             case eButton_Paper:
+                m_pGameStateCb->OnPlayerPick(common::ePick::Paper);
                 break;
             case eButton_Scissors:
+                m_pGameStateCb->OnPlayerPick(common::ePick::Scissors);
                 break;
             case eButton_BackToMenu:
                 m_pGameStateCb->OnSceneChange(IGameState::eScene::eScene_Menu);

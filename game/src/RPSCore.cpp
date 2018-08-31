@@ -2,6 +2,8 @@
 
 #include "RPSCore.h"
 #include "RPSEngine.h"
+#include "GameLogic.h"
+
 #include "logger/easylogging++.h"
 
 // To allow forward declaration of RSPEngine for unique_ptr
@@ -11,12 +13,37 @@ RPSCore::~RPSCore() = default;
 
 void RPSCore::OnSceneChange(IGameState::eScene newScene)
 {
+    if (newScene == IGameState::eScene::eScene_Menu)
+    {
+        m_pGameLogic->ResetState();
+    }
+
     m_currScene = newScene;
 }
 
 void RPSCore::OnQuitApp()
 {
     m_bQuit = true;
+}
+
+void RPSCore::OnPlayerPick(common::ePick pick)
+{
+    m_pGameLogic->SetPlayerPick(pick);
+}
+
+void RPSCore::GetPicks(common::ePick& player, common::ePick& enemy)
+{
+    m_pGameLogic->GetAllPicks(player, enemy);
+}
+
+bool RPSCore::IsRoundFinished()
+{
+    return m_pGameLogic->IsRoundFinished();
+}
+
+void RPSCore::OnNewRound()
+{
+    m_pGameLogic->NewRound();
 }
 
 bool RPSCore::Initialize()
@@ -26,6 +53,9 @@ bool RPSCore::Initialize()
     if (m_pEngine->Initialize(this))
     {
         m_bInitialized = true;
+
+        m_pGameLogic = std::make_unique<GameLogic>(&m_bot);
+        m_pGameLogic->ResetState();
     }
     else
     {
