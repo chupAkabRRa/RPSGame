@@ -2,12 +2,13 @@
 
 #include "logger/easylogging++.h"
 
-LButton::LButton(SDL_Renderer* pRenderer, const std::string& strCaption, const std::string& strFont, int iSize, SDL_Color textColor)
+LButton::LButton(SDL_Renderer* pRenderer, const std::string& strCaption, const std::string& strFont, int iSize, SDL_Color textColor, bool bInteractive)
     : LTexture(pRenderer)
     , m_strCaption(strCaption)
     , m_strOriginalFont(strFont)
     , m_iOriginalSize(iSize)
     , m_Color(textColor)
+    , m_bInteractive(bInteractive)
 {
 }
 
@@ -39,59 +40,62 @@ void LButton::Render()
 
 bool LButton::HandleEvent(SDL_Event* e)
 {
-    // If mouse event happened
-    if (e->type == SDL_MOUSEMOTION || e->type == SDL_MOUSEBUTTONDOWN || e->type == SDL_MOUSEBUTTONUP)
+    if (m_bInteractive)
     {
-        // Get mouse position
-        int x, y;
-        SDL_GetMouseState(&x, &y);
+        // If mouse event happened
+        if (e->type == SDL_MOUSEMOTION || e->type == SDL_MOUSEBUTTONDOWN || e->type == SDL_MOUSEBUTTONUP)
+        {
+            // Get mouse position
+            int x, y;
+            SDL_GetMouseState(&x, &y);
 
-        bool bInside = true;
-        // Mouse is left of the button
-        if (x < m_x)
-        {
-            bInside = false;
-        }
-        // Mouse is right of the button
-        else if ( x > m_x + GetWidth())
-        {
-            bInside = false;
-        }
-        // Mouse above the button
-        else if (y < m_y)
-        {
-            bInside = false;
-        }
-        // Mouse below the button
-        else if (y > m_y + GetHeight())
-        {
-            bInside = false;
-        }
-
-        if (bInside)
-        {
-            m_Color = {255, 0, 0};
-            
-            if (e->type == SDL_MOUSEBUTTONDOWN)
+            bool bInside = true;
+            // Mouse is left of the button
+            if (x < m_x)
             {
-                m_bIsMouseBtnDown = true;
+                bInside = false;
             }
-            else if (e->type == SDL_MOUSEBUTTONUP)
+            // Mouse is right of the button
+            else if ( x > m_x + GetWidth())
             {
-                if (m_bIsMouseBtnDown)
+                bInside = false;
+            }
+            // Mouse above the button
+            else if (y < m_y)
+            {
+                bInside = false;
+            }
+            // Mouse below the button
+            else if (y > m_y + GetHeight())
+            {
+                bInside = false;
+            }
+
+            if (bInside)
+            {
+                m_Color = {255, 0, 0};
+                
+                if (e->type == SDL_MOUSEBUTTONDOWN)
                 {
-                    m_bIsMouseBtnDown = false;
-                    m_bIsClicked = true;
+                    m_bIsMouseBtnDown = true;
+                }
+                else if (e->type == SDL_MOUSEBUTTONUP)
+                {
+                    if (m_bIsMouseBtnDown)
+                    {
+                        m_bIsMouseBtnDown = false;
+                        m_bIsClicked = true;
+                    }
                 }
             }
-        }
-        else
-        {
-            m_Color = {255, 255, 255};
-
-            if (e->type == SDL_MOUSEBUTTONUP && m_bIsMouseBtnDown)
+            else
             {
-                m_bIsMouseBtnDown = false;
+                m_Color = {255, 255, 255};
+
+                if (e->type == SDL_MOUSEBUTTONUP && m_bIsMouseBtnDown)
+                {
+                    m_bIsMouseBtnDown = false;
+                }
             }
         }
     }
