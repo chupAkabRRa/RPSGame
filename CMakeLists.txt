@@ -32,6 +32,7 @@ add_executable(RPSGame RPSGame.cpp
                        ./base/config/RPSConfig.cpp
                        ./base/logger/easylogging++.cpp
                        ./game/src/LTexture.cpp
+                       ./game/src/LButton.cpp
                        ./game/src/RenderObjectMenu.cpp
                        ./game/src/RPSEngine.cpp
                        ./game/src/RPSCore.cpp)
