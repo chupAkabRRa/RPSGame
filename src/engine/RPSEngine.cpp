@@ -79,6 +79,8 @@ bool RPSEngine::Initialize(IGameState* cb)
                         {
                             i->Initialize();
                         }
+
+                        m_iActiveScene = eScene::eScene_Menu;
                     }
                     else
                     {
@@ -141,6 +143,11 @@ void RPSEngine::Close()
     }
 }
 
+void RPSEngine::SetActiveScene(eScene scene)
+{
+    m_iActiveScene = scene;
+}
+
 void RPSEngine::GameLoop()
 {
     bool bQuit = false;
@@ -148,16 +155,14 @@ void RPSEngine::GameLoop()
 
     while (!m_pGameStateCb->GetQuitState())
     {
-        IGameState::eScene iScene = m_pGameStateCb->GetCurrScene();
-
         while(SDL_PollEvent(&sdlEvent) != 0)
         {
             if (sdlEvent.type == SDL_QUIT)
             {
-                m_pGameStateCb->OnQuitApp();
+                m_pGameStateCb->OnStateChange(IGameState::eState::eState_GameQuit);
             }
 
-            m_vScenes[iScene]->HandleEvent(&sdlEvent);
+            m_vScenes[m_iActiveScene]->HandleEvent(&sdlEvent);
         }
 
         // Clear screen
@@ -165,7 +170,7 @@ void RPSEngine::GameLoop()
         SDL_RenderClear(m_pRenderer);
 
         // Render scene
-        m_vScenes[iScene]->Render();
+        m_vScenes[m_iActiveScene]->Render();
 
         // Update screen
         SDL_RenderPresent(m_pRenderer); 

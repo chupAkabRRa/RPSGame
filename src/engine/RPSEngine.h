@@ -12,12 +12,19 @@
 class RPSEngine
 {
 public:
+    enum eScene
+    {
+        eScene_Menu = 0,
+        eScene_Game = 1
+    };
+
     RPSEngine() = default;
     ~RPSEngine();
 
     bool Initialize(IGameState* cb);
     void Close();
     void GameLoop();
+    void SetActiveScene(eScene scene);
 private:
     bool m_bSDLInitialized = false;
     bool m_bSDLImgInitialized = false;
@@ -29,6 +36,7 @@ private:
     IGameState* m_pGameStateCb;
 
     std::vector<std::unique_ptr<IScene>> m_vScenes;
+    eScene m_iActiveScene;
 };
 
 #endif // _RPS_ENGINE_H_

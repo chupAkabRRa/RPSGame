@@ -1,7 +1,8 @@
 #include "GameLogic.h"
 
-GameLogic::GameLogic(IPickProvider* pProvider)
+GameLogic::GameLogic(IPickProvider* pProvider, IGameState* cb)
     : m_pPickProvider(pProvider)
+    , m_pGameStateCb(cb)
 {}
 
 void GameLogic::UpdateResults()
@@ -28,6 +29,7 @@ void GameLogic::UpdateResults()
         }
 
         m_bRoundFinished = true;
+        m_pGameStateCb->OnStateChange(IGameState::eState::eState_GameRoundFinished);
     }
 }
 

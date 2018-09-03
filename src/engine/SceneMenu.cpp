@@ -70,14 +70,14 @@ bool SceneMenu::HandleEvent(SDL_Event* e)
             switch (i)
             {
             case eButton_SinglePlayer:
-                m_pGameStateCb->OnSceneChange(IGameState::eScene::eScene_Game);
+                m_pGameStateCb->OnStateChange(IGameState::eState::eState_GameStarted);
                 break;
             case eButton_CreateLobby:
                 break;
             case eButton_JoinLobby:
                 break;
             case eButton_Exit:
-                m_pGameStateCb->OnQuitApp();
+                m_pGameStateCb->OnStateChange(IGameState::eState::eState_GameQuit);
                 break;
             };
         }

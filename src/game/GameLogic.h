@@ -2,6 +2,7 @@
 #define _GAME_LOGIC_H_
 
 #include "RPSCommon.h"
+#include "IGameState.h"
 
 class GameLogic
 {
@@ -13,7 +14,7 @@ public:
         virtual common::ePick GetEnemyPick() = 0;
     };
 
-    GameLogic(IPickProvider* pProvider);
+    GameLogic(IPickProvider* pProvider, IGameState* cb);
     ~GameLogic() = default;
 
     bool IsRoundFinished() const { return m_bRoundFinished; }
@@ -30,6 +31,7 @@ public:
 
 private:
     IPickProvider* m_pPickProvider;
+    IGameState* m_pGameStateCb;
     bool m_bRoundFinished = false;
     int m_iPlayerScore = 0;
     int m_iEnemyScore = 0;

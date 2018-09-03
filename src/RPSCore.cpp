@@ -11,19 +11,36 @@
 RPSCore::RPSCore() = default;
 RPSCore::~RPSCore() = default;
 
-void RPSCore::OnSceneChange(IGameState::eScene newScene)
+//
+// IGameState callbacks
+//
+
+void RPSCore::OnStateChange(IGameState::eState newState)
 {
-    if (newScene == IGameState::eScene::eScene_Menu)
+    if (newState != m_currState)
     {
-        m_pGameLogic->ResetState();
+        switch (newState)
+        {
+        case IGameState::eState::eState_Menu:
+            m_pGameLogic->ResetState();
+            m_pEngine->SetActiveScene(RPSEngine::eScene::eScene_Menu);
+            break;
+
+        case IGameState::eState::eState_GameStarted:
+            m_pEngine->SetActiveScene(RPSEngine::eScene::eScene_Game);
+            break;
+
+        case IGameState::eState::eState_GameQuit:
+            m_bQuit = true;
+            break;
+
+        case IGameState::eState::eState_GameNewRound:
+            m_pGameLogic->NewRound();
+            break;
+        }
+
+        m_currState = newState;
     }
-
-    m_currScene = newScene;
-}
-
-void RPSCore::OnQuitApp()
-{
-    m_bQuit = true;
 }
 
 void RPSCore::OnPlayerPick(common::ePick pick)
@@ -36,30 +53,24 @@ void RPSCore::GetPicks(common::ePick& player, common::ePick& enemy)
     m_pGameLogic->GetAllPicks(player, enemy);
 }
 
-bool RPSCore::IsRoundFinished()
-{
-    return m_pGameLogic->IsRoundFinished();
-}
-
-void RPSCore::OnNewRound()
-{
-    m_pGameLogic->NewRound();
-}
-
 void RPSCore::GetScores(int& iPlayerScore, int& iEnemyScore)
 {
     m_pGameLogic->GetScores(iPlayerScore, iEnemyScore);
 }
 
+//
+// RPSCore own methods
+//
+
 bool RPSCore::Initialize()
 {
-    // Initialize render engine
+    // Initialize render engine and network layer
     m_pEngine = std::make_unique<RPSEngine>();
     if (m_pEngine->Initialize(this))
     {
         m_bInitialized = true;
 
-        m_pGameLogic = std::make_unique<GameLogic>(&m_bot);
+        m_pGameLogic = std::make_unique<GameLogic>(&m_bot, this);
         m_pGameLogic->ResetState();
     }
     else

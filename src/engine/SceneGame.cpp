@@ -82,10 +82,10 @@ void SceneGame::Render()
         i->Render();
     }
 
-    if (m_pGameStateCb->IsRoundFinished())
+    if (m_pGameStateCb->GetCurrState() == IGameState::eState::eState_GameRoundFinished)
     {
         SDL_Delay(1000);
-        m_pGameStateCb->OnNewRound();
+        m_pGameStateCb->OnStateChange(IGameState::eState::eState_GameNewRound);
 
         int iPlayer, iEnemy;
         m_pGameStateCb->GetScores(iPlayer, iEnemy);
@@ -137,7 +137,7 @@ bool SceneGame::HandleEvent(SDL_Event* e)
             case eButton_BackToMenu:
                 m_vButtons[eButton_You]->UpdateCaption("You: 0");
                 m_vButtons[eButton_Enemy]->UpdateCaption("Enemy: 0");
-                m_pGameStateCb->OnSceneChange(IGameState::eScene::eScene_Menu);
+                m_pGameStateCb->OnStateChange(IGameState::eState::eState_Menu);
                 break;
             };
         }

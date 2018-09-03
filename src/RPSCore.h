@@ -7,6 +7,7 @@
 #include "game/GameBot.h"
 
 class RPSEngine;
+class RPSNetwork;
 class GameLogic;
 
 class RPSCore : public IGameState
@@ -19,12 +20,9 @@ public:
     void Run();
 
     // IGameState methods
-    void OnSceneChange(IGameState::eScene newScene) override;
-    void OnQuitApp() override;
+    void OnStateChange(IGameState::eState newState) override;
     void OnPlayerPick(common::ePick pick) override;
     void GetPicks(common::ePick& player, common::ePick& enemy) override;
-    bool IsRoundFinished() override;
-    void OnNewRound() override;
     void GetScores(int& iPlayerScore, int& iEnemyScore) override;
 
 private:
