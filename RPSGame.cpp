@@ -1,4 +1,6 @@
 #include <memory>
+#include <string>
+#include <algorithm>
 
 #include "src/RPSCore.h"
 
@@ -25,15 +27,31 @@ int main(int argc, char *argv[])
             LOG(WARNING) << "Using logging with default settings";
         }
 
-        // We are ready for kick-off
-        std::unique_ptr<RPSCore> pCore = std::make_unique<RPSCore>();
-        if (pCore->Initialize())
+        if (argc < 2)
         {
-            pCore->Run();
+            LOG(ERROR) << "[CRITICAL] Invalid number of arguments. Please, use following format: \"RPSGame.exe UserA[/UserB]\"";
         }
         else
         {
-            LOG(ERROR) << "[CRITICAL] Core can't be initialized";
+            std::string strUser(argv[1]);
+            std::transform(strUser.begin(), strUser.end(), strUser.begin(), ::tolower);
+            if (strUser == "usera" || strUser == "userb")
+            {
+                // We are ready for kick-off
+                std::unique_ptr<RPSCore> pCore = std::make_unique<RPSCore>();
+                if (pCore->Initialize(strUser))
+                {
+                    pCore->Run();
+                }
+                else
+                {
+                    LOG(ERROR) << "[CRITICAL] Core can't be initialized";
+                }
+            }
+            else
+            {
+                LOG(ERROR) << "[CRITICAL] Wrong user specified. User can be either UserA or UserB";
+            }
         }
     }
     else
