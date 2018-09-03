@@ -78,9 +78,10 @@ bool SceneMenu::HandleEvent(SDL_Event* e)
                 m_pGameStateCb->OnStateChange(IGameState::eState::eState_GameStarted);
                 break;
             case eButton_CreateLobby:
-                m_pGameStateCb->OnStateChange(IGameState::eState::eState_LobbyCreate);
+                m_pGameStateCb->OnStateChange(IGameState::eState::eState_LobbyCreating);
                 break;
             case eButton_JoinLobby:
+                m_pGameStateCb->OnStateChange(IGameState::eState::eState_LobbySearching);
                 break;
             case eButton_Exit:
                 m_pGameStateCb->OnStateChange(IGameState::eState::eState_GameQuit);

@@ -30,8 +30,16 @@ void RPSCore::OnStateChange(IGameState::eState newState)
             m_pEngine->SetActiveScene(RPSEngine::eScene::eScene_Game);
             break;
 
-        case IGameState::eState::eState_LobbyCreate:
-            m_pEngine->SetActiveScene(RPSEngine::eScene::eScene_LobbyCreate);
+        case IGameState::eState::eState_LobbyCreating:
+            CreateLobby();
+            break;
+
+        case IGameState::eState::eState_LobbySearching:
+            SearchLobby();
+            break;
+        
+        case IGameState::eState::eState_LobbyConnecting:
+            JoinLobby();
             break;
 
         case IGameState::eState::eState_GameQuit:
@@ -50,6 +58,22 @@ void RPSCore::OnStateChange(IGameState::eState newState)
 void RPSCore::OnPlayerPick(common::ePick pick)
 {
     m_pGameLogic->SetPlayerPick(pick);
+}
+
+void RPSCore::OnLobbyCreated(bool bResult)
+{
+    if (bResult)
+    {
+        m_currState = IGameState::eState::eState_LobbyCreated;
+    }
+}
+
+void RPSCore::OnLobbyFound(bool bResult)
+{
+    if (bResult)
+    {
+        m_currState = IGameState::eState::eState_LobbyFound;
+    }
 }
 
 void RPSCore::GetPicks(common::ePick& player, common::ePick& enemy)
@@ -135,4 +159,37 @@ void RPSCore::Run()
     {
         LOG(ERROR) << "Can't RUN uninitialized core";
     }
+}
+
+void RPSCore::CreateLobby()
+{
+    std::string strLobbyName;
+    if (RPSConfig::get().GetString("LobbyName", strLobbyName))
+    {
+        m_pEngine->SetActiveScene(RPSEngine::eScene::eScene_LobbyCreate);
+        m_pNetwork->CreateLobby(strLobbyName);
+    }
+    else
+    {
+        LOG(ERROR) << "Lobby name is not specified";
+    }
+}
+
+void RPSCore::SearchLobby()
+{
+    std::string strLobbyName;
+    if (RPSConfig::get().GetString("LobbyName", strLobbyName))
+    {
+        m_pEngine->SetActiveScene(RPSEngine::eScene::eScene_LobbyJoin);
+        m_pNetwork->SearchLobby(strLobbyName);
+    }
+    else
+    {
+        LOG(ERROR) << "Lobby name is not specified";
+    }
+}
+
+void RPSCore::JoinLobby()
+{
+    m_pNetwork->JoinLobby();
 }

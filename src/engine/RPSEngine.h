@@ -17,6 +17,7 @@ public:
         eScene_Menu = 0,
         eScene_Game = 1,
         eScene_LobbyCreate = 2,
+        eScene_LobbyJoin = 3
     };
 
     RPSEngine() = default;

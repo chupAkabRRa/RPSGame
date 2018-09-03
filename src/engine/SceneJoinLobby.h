@@ -1,5 +1,5 @@
-#ifndef _SCENE_CREATE_LOBBY_H_
-#define _SCENE_CREATE_LOBBY_H_
+#ifndef _SCENE_JOIN_LOBBY_H_
+#define _SCENE_JOIN_LOBBY_H_
 
 #include "IScene.h"
 #include "IGameState.h"
@@ -13,11 +13,11 @@
 class LTexture;
 class LButton;
 
-class SceneCreateLobby : public IScene
+class SceneJoinLobby : public IScene
 {
 public:
-    SceneCreateLobby(SDL_Renderer* pRenderer, IGameState* cb);
-    ~SceneCreateLobby();
+    SceneJoinLobby(SDL_Renderer* pRenderer, IGameState* cb);
+    ~SceneJoinLobby();
 
     bool Initialize() override;
     void Render() override;
@@ -32,8 +32,8 @@ private:
 
     enum eStatus
     {
-        eStatus_Creating = 0,
-        eStatus_WaitingForPlayer = 1
+        eStatus_Searching = 0,
+        eStatus_Connecting = 1
     };
 
     const int m_iFontSize = 32;
@@ -49,4 +49,4 @@ private:
     eStatus m_currStatus;
 };
 
-#endif // _SCENE_CREATE_LOBBY_H_
+#endif // _SCENE_JOIN_LOBBY_H_

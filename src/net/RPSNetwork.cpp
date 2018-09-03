@@ -1,13 +1,20 @@
 #include "RPSNetwork.h"
 
+#include "LobbyHost.h"
+#include "LobbyClient.h"
+
 #include "logger/easylogging++.h"
 #include "config/RPSConfig.h"
 
 #include <thread>
 #include <chrono>
 
+RPSNetwork::RPSNetwork() = default;
+
 RPSNetwork::~RPSNetwork()
 {
+    m_vListeners.clear();
+
     if (m_bIsGogInitialized)
     {
         galaxy::api::Shutdown();
@@ -77,12 +84,59 @@ bool RPSNetwork::SignIn(const std::string& strName, const std::string& strPass)
 void RPSNetwork::InitializeInternal()
 {
     m_vListeners.emplace_back(std::make_unique<AuthListener>(this));
+    m_pHost = nullptr;
 }
+
+bool RPSNetwork::CreateLobby(const std::string& strLobbyName)
+{
+    bool bRes = false;
+
+    if (m_bIsGogInitialized && m_bIsUserSignedIn)
+    {
+        m_pHost.reset(new LobbyHost);
+        m_pHost->Initialize(m_pGameStateCb);
+        m_pHost->CreateLobby(strLobbyName);
+        bRes = true;
+    }
+
+    return bRes;
+}
+
+bool RPSNetwork::SearchLobby(const std::string& strLobbyName)
+{
+    bool bRes = false;
+
+    if (m_bIsGogInitialized && m_bIsUserSignedIn)
+    {
+        m_pClient.reset(new LobbyClient);
+        m_pClient->Initialize(m_pGameStateCb);
+        m_pClient->SearchLobby(strLobbyName);
+        bRes = true;       
+    }
+
+    return bRes;
+}
+
+bool RPSNetwork::JoinLobby()
+{
+    bool bRes = false;
+
+    if (m_bIsGogInitialized && m_bIsUserSignedIn && m_pClient)
+    {
+        m_pClient->JoinLobby();
+        bRes = true;
+    }
+
+    return bRes;
+}
+
+//
+// AuthListener
+//
 
 RPSNetwork::AuthListener::AuthListener(RPSNetwork* pWrapper)
     : m_pWrapper(pWrapper)
 {
-
 }
 
 void RPSNetwork::AuthListener::OnAuthSuccess()
