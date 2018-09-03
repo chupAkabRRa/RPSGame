@@ -36,6 +36,7 @@ add_executable(RPSGame RPSGame.cpp
                        ./src/engine/LButton.cpp
                        ./src/engine/SceneMenu.cpp
                        ./src/engine/SceneGame.cpp
+                       ./src/engine/SceneCreateLobby.cpp
                        ./src/engine/RPSEngine.cpp
                        ./src/game/GameLogic.cpp
                        ./src/net/RPSNetwork.cpp
