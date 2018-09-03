@@ -30,6 +30,10 @@ void RPSCore::OnStateChange(IGameState::eState newState)
             m_pEngine->SetActiveScene(RPSEngine::eScene::eScene_Game);
             break;
 
+        case IGameState::eState::eState_LobbyCreate:
+            m_pEngine->SetActiveScene(RPSEngine::eScene::eScene_LobbyCreate);
+            break;
+
         case IGameState::eState::eState_GameQuit:
             m_bQuit = true;
             break;

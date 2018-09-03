@@ -15,7 +15,8 @@ public:
     enum eScene
     {
         eScene_Menu = 0,
-        eScene_Game = 1
+        eScene_Game = 1,
+        eScene_LobbyCreate = 2,
     };
 
     RPSEngine() = default;

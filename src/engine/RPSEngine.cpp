@@ -3,6 +3,7 @@
 #include "RPSEngine.h"
 #include "SceneMenu.h"
 #include "SceneGame.h"
+#include "SceneCreateLobby.h"
 
 #include "logger/easylogging++.h"
 #include "config/RPSConfig.h"
@@ -74,6 +75,7 @@ bool RPSEngine::Initialize(IGameState* cb)
                         // Load scenes
                         m_vScenes.push_back(std::make_unique<SceneMenu>(m_pRenderer, cb));
                         m_vScenes.push_back(std::make_unique<SceneGame>(m_pRenderer, cb));
+                        m_vScenes.push_back(std::make_unique<SceneCreateLobby>(m_pRenderer, cb));
 
                         for (auto& i : m_vScenes)
                         {

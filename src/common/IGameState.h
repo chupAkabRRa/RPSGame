@@ -13,7 +13,9 @@ public:
         eState_GameStarted = 1,
         eState_GameNewRound = 2,
         eState_GameRoundFinished = 3,
-        eState_GameQuit = 4
+        eState_GameQuit = 4,
+        eState_LobbyCreate = 5,
+        eState_LobbyJoin = 6
     };
 
     virtual ~IGameState() = default;
