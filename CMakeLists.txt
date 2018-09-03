@@ -37,9 +37,12 @@ add_executable(RPSGame RPSGame.cpp
                        ./src/engine/SceneMenu.cpp
                        ./src/engine/SceneGame.cpp
                        ./src/engine/SceneCreateLobby.cpp
+                       ./src/engine/SceneJoinLobby.cpp
                        ./src/engine/RPSEngine.cpp
                        ./src/game/GameLogic.cpp
                        ./src/net/RPSNetwork.cpp
+                       ./src/net/LobbyHost.cpp
+                       ./src/net/LobbyClient.cpp
                        ./src/RPSCore.cpp)
 target_link_libraries(RPSGame ${SDL2_LIBRARIES} ${GOG_LIBRARIES})
 if (WIN32)
