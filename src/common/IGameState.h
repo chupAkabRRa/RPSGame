@@ -1,6 +1,7 @@
 #ifndef _IGAME_STATE_H_
 #define _IGAME_STATE_H_
 
+#include <string>
 #include "RPSCommon.h"
 
 class IGameState
@@ -18,8 +19,10 @@ public:
     virtual ~IGameState() = default;
     virtual void OnStateChange(IGameState::eState newState) = 0;
     virtual void OnPlayerPick(common::ePick pick) = 0;
+
     virtual void GetPicks(common::ePick& player, common::ePick& enemy) = 0;
     virtual void GetScores(int& iPlayerScore, int& iEnemyScore) = 0;
+    virtual std::string GetGOGUserName() = 0;
     
     IGameState::eState GetCurrState() const { return m_currState; }
 protected:

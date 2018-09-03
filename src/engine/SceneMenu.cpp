@@ -28,6 +28,7 @@ bool SceneMenu::Initialize()
     m_vButtons.push_back(std::make_unique<LButton>(m_pRenderer, "Create Lobby", m_strFontName, m_iFontSize, textColor));
     m_vButtons.push_back(std::make_unique<LButton>(m_pRenderer, "Join Lobby", m_strFontName, m_iFontSize, textColor));
     m_vButtons.push_back(std::make_unique<LButton>(m_pRenderer, "Exit", m_strFontName, m_iFontSize, textColor));
+    m_vButtons.push_back(std::make_unique<LButton>(m_pRenderer, "Logged as: ", m_strFontName, m_iFontSize / 2, textColor, false));
 
     for (auto& i : m_vButtons)
     {
@@ -43,6 +44,8 @@ bool SceneMenu::Initialize()
     m_vButtons[eButton_JoinLobby]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[2]->GetWidth() / 2, 250);
     // "Exit"
     m_vButtons[eButton_Exit]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[3]->GetWidth() / 2, 300);
+    // "Logged as: "
+    m_vButtons[eButton_Logged]->SetPos(10, (m_DrawingRect.h - m_DrawingRect.y) - 20);
 
     return true;
 }
@@ -50,6 +53,8 @@ bool SceneMenu::Initialize()
 void SceneMenu::Render()
 {
     m_pTextureBg->Render(0, 0);
+
+    m_vButtons[eButton_Logged]->UpdateCaption("Logged as: " + m_pGameStateCb->GetGOGUserName());
 
     for (auto& i : m_vButtons)
     {

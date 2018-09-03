@@ -29,7 +29,8 @@ private:
         eButton_SinglePlayer = 0,
         eButton_CreateLobby = 1,
         eButton_JoinLobby = 2,
-        eButton_Exit = 3
+        eButton_Exit = 3,
+        eButton_Logged = 4,
     };
     const int m_iFontSize = 32;
     const std::string m_strFontName;
