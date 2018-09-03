@@ -23,7 +23,7 @@ public:
 
     bool Initialize(IGameState* cb);
     void Close();
-    void GameLoop();
+    void Animate();
     void SetActiveScene(eScene scene);
 private:
     bool m_bSDLInitialized = false;

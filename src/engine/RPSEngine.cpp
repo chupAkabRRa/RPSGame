@@ -148,31 +148,28 @@ void RPSEngine::SetActiveScene(eScene scene)
     m_iActiveScene = scene;
 }
 
-void RPSEngine::GameLoop()
+void RPSEngine::Animate()
 {
     bool bQuit = false;
     SDL_Event sdlEvent;
 
-    while (!m_pGameStateCb->GetQuitState())
+    while(SDL_PollEvent(&sdlEvent) != 0)
     {
-        while(SDL_PollEvent(&sdlEvent) != 0)
+        if (sdlEvent.type == SDL_QUIT)
         {
-            if (sdlEvent.type == SDL_QUIT)
-            {
-                m_pGameStateCb->OnStateChange(IGameState::eState::eState_GameQuit);
-            }
-
-            m_vScenes[m_iActiveScene]->HandleEvent(&sdlEvent);
+            m_pGameStateCb->OnStateChange(IGameState::eState::eState_GameQuit);
         }
 
-        // Clear screen
-        SDL_SetRenderDrawColor(m_pRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-        SDL_RenderClear(m_pRenderer);
-
-        // Render scene
-        m_vScenes[m_iActiveScene]->Render();
-
-        // Update screen
-        SDL_RenderPresent(m_pRenderer); 
+        m_vScenes[m_iActiveScene]->HandleEvent(&sdlEvent);
     }
+
+    // Clear screen
+    SDL_SetRenderDrawColor(m_pRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_RenderClear(m_pRenderer);
+
+    // Render scene
+    m_vScenes[m_iActiveScene]->Render();
+
+    // Update screen
+    SDL_RenderPresent(m_pRenderer);
 }

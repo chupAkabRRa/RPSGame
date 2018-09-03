@@ -22,8 +22,6 @@ public:
     virtual void GetScores(int& iPlayerScore, int& iEnemyScore) = 0;
     
     IGameState::eState GetCurrState() const { return m_currState; }
-    bool GetQuitState() const { return m_bQuit; }
-
 protected:
     IGameState::eState m_currState = eState_Menu;
     bool m_bQuit = false;

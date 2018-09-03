@@ -87,7 +87,10 @@ void RPSCore::Run()
 {
     if (m_bInitialized)
     {
-        m_pEngine->GameLoop();
+        while (!m_bQuit)
+        {
+            m_pEngine->Animate();
+        }
     }
     else
     {
