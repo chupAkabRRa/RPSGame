@@ -1,8 +1,8 @@
 #include <string>
 
 #include "RPSCore.h"
-#include "RPSEngine.h"
-#include "GameLogic.h"
+#include "engine/RPSEngine.h"
+#include "game/GameLogic.h"
 
 #include "logger/easylogging++.h"
 

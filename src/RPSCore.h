@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "IGameState.h"
-#include "GameBot.h"
+#include "game/GameBot.h"
 
 class RPSEngine;
 class GameLogic;

@@ -13,7 +13,7 @@ endif(WIN32)
 
 # 1) Setting up base includes
 set(BASE_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/base")
-set(GAME_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/game/include")
+set(GAME_INCLUDE_DIRS "${CMAKE_CURRENT_LIST_DIR}/src/common")
 
 # 2) Setting up SDL libraries depending on platform
 if (WIN32)
@@ -31,13 +31,13 @@ include_directories(${GAME_INCLUDE_DIRS} ${BASE_INCLUDE_DIRS})
 add_executable(RPSGame RPSGame.cpp
                        ./base/config/RPSConfig.cpp
                        ./base/logger/easylogging++.cpp
-                       ./game/src/LTexture.cpp
-                       ./game/src/LButton.cpp
-                       ./game/src/SceneMenu.cpp
-                       ./game/src/SceneGame.cpp
-                       ./game/src/GameLogic.cpp
-                       ./game/src/RPSEngine.cpp
-                       ./game/src/RPSCore.cpp)
+                       ./src/engine/LTexture.cpp
+                       ./src/engine/LButton.cpp
+                       ./src/engine/SceneMenu.cpp
+                       ./src/engine/SceneGame.cpp
+                       ./src/engine/RPSEngine.cpp
+                       ./src/game/GameLogic.cpp
+                       ./src/RPSCore.cpp)
 target_link_libraries(RPSGame ${SDL2_LIBRARIES})
 if (WIN32)
     if (${CMAKE_GENERATOR} STREQUAL "Visual Studio 14 2015 Win64")
@@ -68,6 +68,6 @@ file(GLOB PUBLIC_DLLS ${SDL_DLL_ORIGIN_PATH}/*.dll)
 file(COPY ${PUBLIC_DLLS} DESTINATION ${FILES_DESTINATION_PATH})
 
 # Assets
-file (COPY ${CMAKE_CURRENT_LIST_DIR}/game/assets
+file (COPY ${CMAKE_CURRENT_LIST_DIR}/src/assets
       DESTINATION ${FILES_DESTINATION_PATH})
 

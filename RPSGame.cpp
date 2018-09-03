@@ -1,8 +1,9 @@
 #include <memory>
 
+#include "src/RPSCore.h"
+
 #include "logger/easylogging++.h"
 #include "config/RPSConfig.h"
-#include "RPSCore.h"
 
 INITIALIZE_EASYLOGGINGPP
 
