@@ -20,6 +20,7 @@ if (WIN32)
     if (${CMAKE_GENERATOR} STREQUAL "Visual Studio 14 2015 Win64")
         set(SDL2_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x64/SDL2.lib;${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x64/SDL2main.lib;
                             ${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x64/SDL2_image.lib;${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x64/SDL2_ttf.lib")
+        set(GOG_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/lib/win/gog/x64/Galaxy64.lib")
     else()
         set(SDL2_LIBRARIES "${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x86/SDL2.lib;${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x86/SDL2main.lib;
                             ${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x86/SDL2_image.lib;${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x86/SDL2_ttf.lib")
@@ -37,8 +38,9 @@ add_executable(RPSGame RPSGame.cpp
                        ./src/engine/SceneGame.cpp
                        ./src/engine/RPSEngine.cpp
                        ./src/game/GameLogic.cpp
+                       ./src/net/RPSNetwork.cpp
                        ./src/RPSCore.cpp)
-target_link_libraries(RPSGame ${SDL2_LIBRARIES})
+target_link_libraries(RPSGame ${SDL2_LIBRARIES} ${GOG_LIBRARIES})
 if (WIN32)
     if (${CMAKE_GENERATOR} STREQUAL "Visual Studio 14 2015 Win64")
         install(TARGETS RPSGame DESTINATION ${CMAKE_CURRENT_LIST_DIR}/bin/win/x64)
@@ -51,6 +53,7 @@ endif(WIN32)
 if (WIN32)
     if (${CMAKE_GENERATOR} STREQUAL "Visual Studio 14 2015 Win64")
         set(SDL_DLL_ORIGIN_PATH ${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x64)
+        set(GOG_DLL_ORIGIN_PATH ${CMAKE_CURRENT_LIST_DIR}/lib/win/gog/x64)
         set(FILES_DESTINATION_PATH ${CMAKE_CURRENT_LIST_DIR}/bin/win/x64)
     else()
         set(SDL_DLL_ORIGIN_PATH ${CMAKE_CURRENT_LIST_DIR}/lib/win/sdl/x86)
@@ -64,7 +67,7 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/RPSGame.conf
     DESTINATION ${FILES_DESTINATION_PATH})
 
 # SDL libs
-file(GLOB PUBLIC_DLLS ${SDL_DLL_ORIGIN_PATH}/*.dll)
+file(GLOB PUBLIC_DLLS ${SDL_DLL_ORIGIN_PATH}/*.dll ${GOG_DLL_ORIGIN_PATH}/*.dll)
 file(COPY ${PUBLIC_DLLS} DESTINATION ${FILES_DESTINATION_PATH})
 
 # Assets
