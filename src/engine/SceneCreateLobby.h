@@ -5,7 +5,7 @@
 #include "IGameState.h"
 
 #include <memory>
-#include <vector>
+#include <map>
 #include <string>
 
 #include "sdl/SDL.h"
@@ -44,7 +44,7 @@ private:
     IGameState* m_pGameStateCb;
 
     std::unique_ptr<LTexture> m_pTextureBg;
-    std::vector<std::unique_ptr<LButton>> m_vButtons;
+    std::map<eButtons, std::unique_ptr<LButton>> m_vButtons;
 
     eStatus m_currStatus;
 };

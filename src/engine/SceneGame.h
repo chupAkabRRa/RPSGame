@@ -5,7 +5,7 @@
 #include "IGameState.h"
 
 #include <memory>
-#include <vector>
+#include <map>
 #include <string>
 
 #include "sdl/SDL.h"
@@ -41,8 +41,8 @@ private:
     IGameState* m_pGameStateCb;
 
     std::unique_ptr<LTexture> m_pTextureBg;
-    std::vector<std::unique_ptr<LTexture>> m_vTexturePicks;
-    std::vector<std::unique_ptr<LButton>> m_vButtons;
+    std::map<common::ePick, std::unique_ptr<LTexture>> m_vTexturePicks;
+    std::map<eButtons, std::unique_ptr<LButton>> m_vButtons;
 };
 
 #endif // _SCENE_MENU_H_

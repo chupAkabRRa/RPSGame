@@ -74,14 +74,14 @@ bool RPSEngine::Initialize(IGameState* cb)
                         m_pGameStateCb = cb;
 
                         // Load scenes
-                        m_vScenes.emplace_back(std::make_unique<SceneMenu>(m_pRenderer, cb));
-                        m_vScenes.emplace_back(std::make_unique<SceneGame>(m_pRenderer, cb));
-                        m_vScenes.emplace_back(std::make_unique<SceneCreateLobby>(m_pRenderer, cb));
-                        m_vScenes.emplace_back(std::make_unique<SceneJoinLobby>(m_pRenderer, cb));
+                        m_vScenes[eScene::eScene_Menu] = std::make_unique<SceneMenu>(m_pRenderer, cb);
+                        m_vScenes[eScene::eScene_Game] = std::make_unique<SceneGame>(m_pRenderer, cb);
+                        m_vScenes[eScene::eScene_LobbyCreate] = std::make_unique<SceneCreateLobby>(m_pRenderer, cb);
+                        m_vScenes[eScene::eScene_LobbyJoin] = std::make_unique<SceneJoinLobby>(m_pRenderer, cb);
 
                         for (auto& i : m_vScenes)
                         {
-                            i->Initialize();
+                            i.second->Initialize();
                         }
 
                         m_iActiveScene = eScene::eScene_Menu;

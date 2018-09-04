@@ -24,26 +24,26 @@ bool SceneMenu::Initialize()
     m_pTextureBg->LoadFromFile("assets/blue-burst-abstract-bg.png");
 
     SDL_Color textColor = { 255, 255, 255 };
-    m_vButtons.push_back(std::make_unique<LButton>(m_pRenderer, "Single Player", m_strFontName, m_iFontSize, textColor));
-    m_vButtons.push_back(std::make_unique<LButton>(m_pRenderer, "Create Lobby", m_strFontName, m_iFontSize, textColor));
-    m_vButtons.push_back(std::make_unique<LButton>(m_pRenderer, "Join Lobby", m_strFontName, m_iFontSize, textColor));
-    m_vButtons.push_back(std::make_unique<LButton>(m_pRenderer, "Exit", m_strFontName, m_iFontSize, textColor));
-    m_vButtons.push_back(std::make_unique<LButton>(m_pRenderer, "Logged as: ", m_strFontName, m_iFontSize / 2, textColor, false));
+    m_vButtons[eButton_SinglePlayer] = std::make_unique<LButton>(m_pRenderer, "Single Player", m_strFontName, m_iFontSize, textColor);
+    m_vButtons[eButton_CreateLobby] = std::make_unique<LButton>(m_pRenderer, "Create Lobby", m_strFontName, m_iFontSize, textColor);
+    m_vButtons[eButton_JoinLobby] = std::make_unique<LButton>(m_pRenderer, "Join Lobby", m_strFontName, m_iFontSize, textColor);
+    m_vButtons[eButton_Exit] = std::make_unique<LButton>(m_pRenderer, "Exit", m_strFontName, m_iFontSize, textColor);
+    m_vButtons[eButton_Logged] = std::make_unique<LButton>(m_pRenderer, "Logged as: ", m_strFontName, m_iFontSize / 2, textColor, false);
 
     for (auto& i : m_vButtons)
     {
-        i->Initialize();
+        i.second->Initialize();
     }
 
     // Set correct coordinates for buttons
     // "Single Player"
-    m_vButtons[eButton_SinglePlayer]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[0]->GetWidth() / 2, 150);
+    m_vButtons[eButton_SinglePlayer]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[eButton_SinglePlayer]->GetWidth() / 2, 150);
     // "Create Lobby"
-    m_vButtons[eButton_CreateLobby]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[1]->GetWidth() / 2, 200);
+    m_vButtons[eButton_CreateLobby]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[eButton_CreateLobby]->GetWidth() / 2, 200);
     // "Join Lobby"
-    m_vButtons[eButton_JoinLobby]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[2]->GetWidth() / 2, 250);
+    m_vButtons[eButton_JoinLobby]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[eButton_JoinLobby]->GetWidth() / 2, 250);
     // "Exit"
-    m_vButtons[eButton_Exit]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[3]->GetWidth() / 2, 300);
+    m_vButtons[eButton_Exit]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[eButton_Exit]->GetWidth() / 2, 300);
     // "Logged as: "
     m_vButtons[eButton_Logged]->SetPos(10, (m_DrawingRect.h - m_DrawingRect.y) - 20);
 
@@ -58,21 +58,21 @@ void SceneMenu::Render()
 
     for (auto& i : m_vButtons)
     {
-        i->Render();
+        i.second->Render();
     }
 }
 
 bool SceneMenu::HandleEvent(SDL_Event* e)
 {
-    for (std::size_t i = 0; i < m_vButtons.size(); i++)
+    for (auto& i : m_vButtons)
     {
-        m_vButtons[i]->HandleEvent(e);
+        i.second->HandleEvent(e);
 
-        if (m_vButtons[i]->IsClicked())
+        if (i.second->IsClicked())
         {
-            m_vButtons[i]->ClickedReset();
+            i.second->ClickedReset();
 
-            switch (i)
+            switch (i.first)
             {
             case eButton_SinglePlayer:
                 m_pGameStateCb->OnStateChange(IGameState::eState::eState_GameStarted);

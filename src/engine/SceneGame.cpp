@@ -22,25 +22,25 @@ bool SceneGame::Initialize()
     m_pTextureBg = std::make_unique<LTexture>(m_pRenderer);
     m_pTextureBg->LoadFromFile("assets/blue-burst-abstract-bg.png");
 
-    m_vTexturePicks.push_back(std::make_unique<LTexture>(m_pRenderer));
-    m_vTexturePicks.push_back(std::make_unique<LTexture>(m_pRenderer));
-    m_vTexturePicks.push_back(std::make_unique<LTexture>(m_pRenderer));
-    m_vTexturePicks.push_back(std::make_unique<LTexture>(m_pRenderer));
+    m_vTexturePicks[common::ePick::None] = std::make_unique<LTexture>(m_pRenderer);
+    m_vTexturePicks[common::ePick::Rock] = std::make_unique<LTexture>(m_pRenderer);
+    m_vTexturePicks[common::ePick::Scissors] = std::make_unique<LTexture>(m_pRenderer);
+    m_vTexturePicks[common::ePick::Paper] = std::make_unique<LTexture>(m_pRenderer);
     m_vTexturePicks[common::ePick::Rock]->LoadFromFile("assets/rock.png");
     m_vTexturePicks[common::ePick::Scissors]->LoadFromFile("assets/scissors.png");
     m_vTexturePicks[common::ePick::Paper]->LoadFromFile("assets/paper.png");
 
     SDL_Color textColor = { 255, 255, 255 };
-    m_vButtons.push_back(std::make_unique<LButton>(m_pRenderer, "Rock", m_strFontName, m_iFontSize, textColor));
-    m_vButtons.push_back(std::make_unique<LButton>(m_pRenderer, "Paper", m_strFontName, m_iFontSize, textColor));
-    m_vButtons.push_back(std::make_unique<LButton>(m_pRenderer, "Scissors", m_strFontName, m_iFontSize, textColor));
-    m_vButtons.push_back(std::make_unique<LButton>(m_pRenderer, "<-", m_strFontName, m_iFontSize, textColor));
-    m_vButtons.push_back(std::make_unique<LButton>(m_pRenderer, "You: 0", m_strFontName, m_iFontSize, textColor, false));
-    m_vButtons.push_back(std::make_unique<LButton>(m_pRenderer, "Enemy: 0", m_strFontName, m_iFontSize, textColor, false));
+    m_vButtons[eButton_Rock] = std::make_unique<LButton>(m_pRenderer, "Rock", m_strFontName, m_iFontSize, textColor);
+    m_vButtons[eButton_Paper] = std::make_unique<LButton>(m_pRenderer, "Paper", m_strFontName, m_iFontSize, textColor);
+    m_vButtons[eButton_Scissors] = std::make_unique<LButton>(m_pRenderer, "Scissors", m_strFontName, m_iFontSize, textColor);
+    m_vButtons[eButton_BackToMenu] = std::make_unique<LButton>(m_pRenderer, "<-", m_strFontName, m_iFontSize, textColor);
+    m_vButtons[eButton_You] = std::make_unique<LButton>(m_pRenderer, "You: 0", m_strFontName, m_iFontSize, textColor, false);
+    m_vButtons[eButton_Enemy] = std::make_unique<LButton>(m_pRenderer, "Enemy: 0", m_strFontName, m_iFontSize, textColor, false);
 
     for (auto& i : m_vButtons)
     {
-        i->Initialize();
+        i.second->Initialize();
     }
 
     // Set correct coordinates for buttons
@@ -79,7 +79,7 @@ void SceneGame::Render()
 
     for (auto& i : m_vButtons)
     {
-        i->Render();
+        i.second->Render();
     }
 
     if (m_pGameStateCb->GetCurrState() == IGameState::eState::eState_GameRoundFinished)
@@ -115,15 +115,15 @@ void SceneGame::Render()
 
 bool SceneGame::HandleEvent(SDL_Event* e)
 {
-    for (std::size_t i = 0; i < m_vButtons.size(); i++)
+    for (auto& i : m_vButtons)
     {
-        m_vButtons[i]->HandleEvent(e);
+        i.second->HandleEvent(e);
 
-        if (m_vButtons[i]->IsClicked())
+        if (i.second->IsClicked())
         {
-            m_vButtons[i]->ClickedReset();
+            i.second->ClickedReset();
 
-            switch (i)
+            switch (i.first)
             {
             case eButton_Rock:
                 m_pGameStateCb->OnPlayerPick(common::ePick::Rock);

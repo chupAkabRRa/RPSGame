@@ -24,17 +24,17 @@ bool SceneCreateLobby::Initialize()
     m_pTextureBg->LoadFromFile("assets/blue-burst-abstract-bg.png");
 
     SDL_Color textColor = { 255, 255, 255 };
-    m_vButtons.emplace_back(std::make_unique<LButton>(m_pRenderer, "Creating lobby...", m_strFontName, m_iFontSize, textColor, false));
-    m_vButtons.emplace_back(std::make_unique<LButton>(m_pRenderer, "<-", m_strFontName, m_iFontSize, textColor));
+    m_vButtons[eButton_Status] = std::make_unique<LButton>(m_pRenderer, "Creating lobby...", m_strFontName, m_iFontSize, textColor, false);
+    m_vButtons[eButton_BackToMenu] = std::make_unique<LButton>(m_pRenderer, "<-", m_strFontName, m_iFontSize, textColor);
 
     for (auto& i : m_vButtons)
     {
-        i->Initialize();
+        i.second->Initialize();
     }
 
     // Set correct coordinates for buttons
     // "<Status>"
-    m_vButtons[eButton_Status]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[0]->GetWidth() / 2,
+    m_vButtons[eButton_Status]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[eButton_Status]->GetWidth() / 2,
                                        (m_DrawingRect.h - m_DrawingRect.y) / 2);
     // "Back to main menu"
     m_vButtons[eButton_BackToMenu]->SetPos(10, 10);
@@ -52,7 +52,7 @@ void SceneCreateLobby::Render()
         m_pGameStateCb->GetCurrState() == IGameState::eState::eState_LobbyCreated)
     {
         m_vButtons[eButton_Status]->UpdateCaption("Waiting for 2-nd player...");
-        m_vButtons[eButton_Status]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[0]->GetWidth() / 2,
+        m_vButtons[eButton_Status]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[eButton_Status]->GetWidth() / 2,
                                            (m_DrawingRect.h - m_DrawingRect.y) / 2);
         m_currStatus = eStatus::eStatus_WaitingForPlayer;
     }
@@ -60,28 +60,28 @@ void SceneCreateLobby::Render()
             m_pGameStateCb->GetCurrState() == IGameState::eState::eState_LobbyCreating)
     {
         m_vButtons[eButton_Status]->UpdateCaption("Creating lobby...");
-        m_vButtons[eButton_Status]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[0]->GetWidth() / 2,
+        m_vButtons[eButton_Status]->SetPos((m_DrawingRect.w - m_DrawingRect.x) / 2 - m_vButtons[eButton_Status]->GetWidth() / 2,
                                            (m_DrawingRect.h - m_DrawingRect.y) / 2);
         m_currStatus = eStatus::eStatus_Creating;
     }
 
     for (auto& i : m_vButtons)
     {
-        i->Render();
+        i.second->Render();
     }
 }
 
 bool SceneCreateLobby::HandleEvent(SDL_Event* e)
 {
-    for (std::size_t i = 0; i < m_vButtons.size(); i++)
+    for (auto& i : m_vButtons)
     {
-        m_vButtons[i]->HandleEvent(e);
+        i.second->HandleEvent(e);
 
-        if (m_vButtons[i]->IsClicked())
+        if (i.second->IsClicked())
         {
-            m_vButtons[i]->ClickedReset();
+            i.second->ClickedReset();
 
-            switch (i)
+            switch (i.first)
             {
             case eButton_BackToMenu:
                 m_pGameStateCb->OnStateChange(IGameState::eState::eState_Menu);
