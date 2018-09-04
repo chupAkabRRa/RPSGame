@@ -35,8 +35,7 @@ void LobbyHost::CreateLobby(const std::string& strLobbyName)
 
 bool LobbyHost::LeaveLobbySync()
 {
-    // TODO: why crash?
-    //galaxy::api::Matchmaking()->LeaveLobby(m_lobbyId);
+    galaxy::api::Matchmaking()->LeaveLobby(m_lobbyId);
 
     // Let's make this method sync
     int attempts = 0;
@@ -45,7 +44,7 @@ bool LobbyHost::LeaveLobbySync()
         galaxy::api::ProcessData();
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         attempts++;
-    } while (attempts < 1 && m_bIsConnected);
+    } while (attempts < 10 && m_bIsConnected);
 
     return !m_bIsConnected;
 }

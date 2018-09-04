@@ -60,6 +60,12 @@ void RPSNetwork::ProcessData()
     }
 }
 
+void RPSNetwork::ResetState()
+{
+    m_pHost.reset();
+    m_pClient.reset();
+}
+
 bool RPSNetwork::SignIn(const std::string& strName, const std::string& strPass)
 {
     if (m_bIsGogInitialized)
@@ -90,6 +96,7 @@ bool RPSNetwork::CreateLobby(const std::string& strLobbyName)
 
     if (m_bIsGogInitialized && m_bIsUserSignedIn)
     {
+        m_pClient.reset();
         m_pHost.reset(new LobbyHost);
         m_pHost->Initialize(m_pGameStateCb);
         m_pHost->CreateLobby(strLobbyName);
@@ -105,6 +112,7 @@ bool RPSNetwork::SearchLobby(const std::string& strLobbyName)
 
     if (m_bIsGogInitialized && m_bIsUserSignedIn)
     {
+        m_pHost.reset();
         m_pClient.reset(new LobbyClient);
         m_pClient->Initialize(m_pGameStateCb);
         m_pClient->SearchLobby(strLobbyName);

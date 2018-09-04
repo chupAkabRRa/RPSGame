@@ -2,8 +2,19 @@
 
 #include "logger/easylogging++.h"
 
+#include <thread>
+#include <chrono>
+
 LobbyClient::~LobbyClient()
 {
+    if (m_bIsConnected)
+    {
+        if (!LeaveLobbySync())
+        {
+            LOG(WARNING) << "Can't leave lobby correctly";
+        }
+    }
+    
     m_vListeners.clear();
 }
 
@@ -31,6 +42,22 @@ void LobbyClient::JoinLobby()
     {
         galaxy::api::Matchmaking()->JoinLobby(m_lobbyId);
     }
+}
+
+bool LobbyClient::LeaveLobbySync()
+{
+    galaxy::api::Matchmaking()->LeaveLobby(m_lobbyId);
+
+    // Let's make this method sync
+    int attempts = 0;
+    do
+    {
+        galaxy::api::ProcessData();
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        attempts++;
+    } while (attempts < 10 && m_bIsConnected);
+
+    return !m_bIsConnected;
 }
 
 //

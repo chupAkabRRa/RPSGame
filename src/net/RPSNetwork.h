@@ -20,6 +20,7 @@ public:
 
     bool Initialize(IGameState* cb);
     void ProcessData();
+    void ResetState();
 
     bool SignIn(const std::string& strName, const std::string& strPass);
     bool IsSignedIn() const;
@@ -49,7 +50,7 @@ private:
 
     IGameState* m_pGameStateCb;
     bool m_bIsGogInitialized = false;
-    
+
     bool m_bIsUserSignedIn = false;
     std::string m_strUserName;
 

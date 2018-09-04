@@ -41,6 +41,8 @@ private:
         LobbyClient* m_pWrapper;
     };
 
+    bool LeaveLobbySync();
+
     IGameState* m_pGameStateCb;
     std::string m_strLobbyName;
     bool m_bIsLobbyFound = false;

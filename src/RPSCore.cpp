@@ -25,6 +25,7 @@ void RPSCore::OnStateChange(IGameState::eState newState)
         {
         case IGameState::eState::eState_Menu:
             m_pGameLogic->ResetState();
+            m_pNetwork->ResetState();
             m_pEngine->SetActiveScene(RPSEngine::eScene::eScene_Menu);
             break;
 
@@ -51,6 +52,7 @@ void RPSCore::OnStateChange(IGameState::eState newState)
             break;
 
         case IGameState::eState::eState_GameQuit:
+            m_pNetwork->ResetState();
             m_bQuit = true;
             break;
 
