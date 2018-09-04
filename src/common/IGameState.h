@@ -27,10 +27,11 @@ public:
     virtual void OnPlayerPick(common::ePick pick) = 0;
     virtual void OnLobbyCreated(bool bResult) = 0;
     virtual void OnLobbyFound(bool bResult) = 0;
+    virtual void OnSignedIn(const std::string& strUserName) = 0;
 
     virtual void GetPicks(common::ePick& player, common::ePick& enemy) = 0;
     virtual void GetScores(int& iPlayerScore, int& iEnemyScore) = 0;
-    virtual std::string GetGOGUserName() = 0;
+    virtual std::string GetGOGUserName() const = 0;
     
     IGameState::eState GetCurrState() const { return m_currState; }
 protected:

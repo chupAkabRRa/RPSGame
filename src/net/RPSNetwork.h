@@ -20,7 +20,10 @@ public:
 
     bool Initialize(IGameState* cb);
     void ProcessData();
+
     bool SignIn(const std::string& strName, const std::string& strPass);
+    bool IsSignedIn() const;
+
     bool CreateLobby(const std::string& strLobbyName);
     bool SearchLobby(const std::string& strLobbyName);
     bool JoinLobby();
@@ -46,7 +49,9 @@ private:
 
     IGameState* m_pGameStateCb;
     bool m_bIsGogInitialized = false;
+    
     bool m_bIsUserSignedIn = false;
+    std::string m_strUserName;
 
     std::unique_ptr<LobbyHost> m_pHost;
     std::unique_ptr<LobbyClient> m_pClient;

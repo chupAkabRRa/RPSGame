@@ -64,27 +64,24 @@ bool RPSNetwork::SignIn(const std::string& strName, const std::string& strPass)
 {
     if (m_bIsGogInitialized)
     {
+        m_strUserName = strName;
         galaxy::api::User()->SignIn(strName.c_str(), strPass.c_str());
-        
-        // Let's make this method sync
-        int attempts = 0;
-        do
-        {
-            galaxy::api::ProcessData();
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
-            attempts++;
-        } while (attempts < 10 && !m_bIsUserSignedIn);
-
-        return m_bIsUserSignedIn;
+        return true;
     }
 
     return false;
+}
+
+bool RPSNetwork::IsSignedIn() const
+{
+    return m_bIsUserSignedIn;
 }
 
 void RPSNetwork::InitializeInternal()
 {
     m_vListeners.emplace_back(std::make_unique<AuthListener>(this));
     m_pHost = nullptr;
+    m_pClient = nullptr;
 }
 
 bool RPSNetwork::CreateLobby(const std::string& strLobbyName)
@@ -194,13 +191,14 @@ RPSNetwork::AuthListener::AuthListener(RPSNetwork* pWrapper)
 
 void RPSNetwork::AuthListener::OnAuthSuccess()
 {
-    LOG(INFO) << "Connected";
+    LOG(INFO) << "[GOG] Signed In";
     m_pWrapper->m_bIsUserSignedIn = true;
+    m_pWrapper->m_pGameStateCb->OnSignedIn(m_pWrapper->m_strUserName);
 }
 
 void RPSNetwork::AuthListener::OnAuthFailure(FailureReason reason)
 {
-    LOG(ERROR) << "Can't sign in: " << reason;
+    LOG(ERROR) << "[GOG] Can't sign in: " << reason;
     m_pWrapper->m_bIsUserSignedIn = false;
 }
 

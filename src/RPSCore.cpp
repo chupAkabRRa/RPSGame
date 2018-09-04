@@ -97,9 +97,14 @@ void RPSCore::GetScores(int& iPlayerScore, int& iEnemyScore)
     m_pGameLogic->GetScores(iPlayerScore, iEnemyScore);
 }
 
-std::string RPSCore::GetGOGUserName()
+std::string RPSCore::GetGOGUserName() const
 {
     return m_strUserName;
+}
+
+void RPSCore::OnSignedIn(const std::string& strUserName)
+{
+    m_strUserName = strUserName;
 }
 
 //
@@ -142,7 +147,6 @@ bool RPSCore::Initialize(const std::string& strUser)
         {
             if (m_pNetwork->SignIn(strName.c_str(), strPass.c_str()))
             {
-                m_strUserName = strName;
                 m_bInitialized = true;
             }
         }
@@ -174,29 +178,39 @@ void RPSCore::Run()
 
 void RPSCore::CreateLobby()
 {
-    std::string strLobbyName;
-    if (RPSConfig::get().GetString("LobbyName", strLobbyName))
+    if (m_pNetwork->IsSignedIn())
     {
-        m_pEngine->SetActiveScene(RPSEngine::eScene::eScene_LobbyCreate);
-        m_pNetwork->CreateLobby(strLobbyName);
+        std::string strLobbyName;
+        if (RPSConfig::get().GetString("LobbyName", strLobbyName))
+        {
+            m_pEngine->SetActiveScene(RPSEngine::eScene::eScene_LobbyCreate);
+            m_pNetwork->CreateLobby(strLobbyName);
+        }
+        else
+        {
+            LOG(ERROR) << "Lobby name is not specified";
+        }
     }
     else
     {
-        LOG(ERROR) << "Lobby name is not specified";
+        LOG(WARNING) << "Can't create lobby when you are not signed in";
     }
 }
 
 void RPSCore::SearchLobby()
 {
-    std::string strLobbyName;
-    if (RPSConfig::get().GetString("LobbyName", strLobbyName))
+    if (m_pNetwork->IsSignedIn())
     {
-        m_pEngine->SetActiveScene(RPSEngine::eScene::eScene_LobbyJoin);
-        m_pNetwork->SearchLobby(strLobbyName);
-    }
-    else
-    {
-        LOG(ERROR) << "Lobby name is not specified";
+        std::string strLobbyName;
+        if (RPSConfig::get().GetString("LobbyName", strLobbyName))
+        {
+            m_pEngine->SetActiveScene(RPSEngine::eScene::eScene_LobbyJoin);
+            m_pNetwork->SearchLobby(strLobbyName);
+        }
+        else
+        {
+            LOG(ERROR) << "Lobby name is not specified";
+        }
     }
 }
 

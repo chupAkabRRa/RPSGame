@@ -25,10 +25,11 @@ public:
     void OnPlayerPick(common::ePick pick) override;
     void OnLobbyCreated(bool bResult) override;
     void OnLobbyFound(bool bResult) override;
+    void OnSignedIn(const std::string& strUserName) override;
 
     void GetPicks(common::ePick& player, common::ePick& enemy) override;
     void GetScores(int& iPlayerScore, int& iEnemyScore) override;
-    std::string GetGOGUserName() override;
+    std::string GetGOGUserName() const override;
 
 private:
     void CreateLobby();
