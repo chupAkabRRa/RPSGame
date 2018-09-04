@@ -9,6 +9,12 @@
 
 INITIALIZE_EASYLOGGINGPP
 
+//
+// Main entry poin.
+// To execute the program, please, specify user you want to be like that:
+// "RPSGame.exe UserA[/UserB]"
+//
+
 int main(int argc, char *argv[])
 {
     if (RPSConfig::get().Init())

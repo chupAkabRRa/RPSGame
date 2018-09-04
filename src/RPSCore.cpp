@@ -1,6 +1,8 @@
 #include "RPSCore.h"
+
 #include "engine/RPSEngine.h"
 #include "game/GameLogic.h"
+#include "game/GameBot.h"
 #include "net/RPSNetwork.h"
 
 #include "logger/easylogging++.h"
@@ -63,7 +65,9 @@ void RPSCore::OnStateChange(IGameState::eState newState)
 
 void RPSCore::OnPlayerPick(common::ePick pick)
 {
+    // Set internal state
     m_pGameLogic->SetPlayerPick(pick);
+    // Notify opponent
     m_pNetwork->SendOwnPick(pick);
 }
 
@@ -104,16 +108,17 @@ std::string RPSCore::GetGOGUserName()
 
 bool RPSCore::Initialize(const std::string& strUser)
 {
+    m_pBot = std::make_shared<GameBot>();
+
     // Initialize render engine and network layer
     m_pEngine = std::make_unique<RPSEngine>();
     m_pNetwork = std::make_shared<RPSNetwork>();
-    m_pBot = std::make_shared<GameBot>();
     if (m_pEngine->Initialize(this) && m_pNetwork->Initialize(this))
     {
         m_pGameLogic = std::make_unique<GameLogic>(m_pBot, this);
         m_pGameLogic->ResetState();
 
-        LOG(INFO) << "Trying to connect " << strUser;
+        LOG(INFO) << "Trying to sing in to GOG as " << strUser;
         std::string strName, strPass;
         std::string strNameKey, strPassKey;
         if (strUser == "usera")
@@ -131,7 +136,6 @@ bool RPSCore::Initialize(const std::string& strUser)
             !RPSConfig::get().GetString(strPassKey.c_str(), strPass))
         {
             LOG(ERROR) << "[CRITICAL] Can't find credentials for " << strUser;
-            m_pEngine->Close();
             m_bInitialized = false;
         }
         else
@@ -145,8 +149,7 @@ bool RPSCore::Initialize(const std::string& strUser)
     }
     else
     {
-        LOG(ERROR) << "[CRITICAL] Render engine can't be initialized";
-        m_pEngine->Close();
+        LOG(ERROR) << "[CRITICAL] Render/network engine can't be initialized";
         m_bInitialized = false;
     }
 

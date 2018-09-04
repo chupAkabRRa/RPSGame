@@ -5,11 +5,11 @@
 #include <string>
 
 #include "IGameState.h"
-#include "game/GameBot.h"
 
 class RPSEngine;
 class RPSNetwork;
 class GameLogic;
+class GameBot;
 
 class RPSCore : public IGameState
 {
@@ -46,4 +46,4 @@ private:
     std::shared_ptr<GameBot> m_pBot;
 };
 
-#endif // _RPD_CORE_H_
+#endif // _RPS_CORE_H_
