@@ -13,3 +13,7 @@ Both these files:
 1) Create separate path for binaries(e.g. _bin\win\x64_) and project files (e.g. _build\win\x64_);
 2) Run cmake with _install_ target.
 
+# Usage
+To start the game simply run this command:
+"RPSGame.exe UserA" or "RPSGame.exe UserB" (depending on what user you want to sign in)
+
