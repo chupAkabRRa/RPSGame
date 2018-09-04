@@ -6,9 +6,11 @@
 #include <memory>
 
 #include "IGameState.h"
+#include "SenderReceiver.h"
+
 #include "gog/GalaxyApi.h"
 
-class LobbyClient
+class LobbyClient : public SenderReceiver
 {
 public:
     LobbyClient() = default;
@@ -17,9 +19,6 @@ public:
     void Initialize(IGameState* cb);
     void SearchLobby(const std::string& strLobbyName);
     void JoinLobby();
-
-    bool ReadData(std::string& strData);
-    bool SendData(const std::string& strData);
 private:
     class LobbyListListener : public galaxy::api::GlobalLobbyListListener
     {
@@ -48,7 +47,6 @@ private:
     bool m_bIsConnected = false;
 
     galaxy::api::GalaxyID m_lobbyId;
-    galaxy::api::GalaxyID m_enemyId;
 
     std::vector<std::unique_ptr<galaxy::api::IGalaxyListener>> m_vListeners;
 };

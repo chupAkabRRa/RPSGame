@@ -33,31 +33,6 @@ void LobbyClient::JoinLobby()
     }
 }
 
-bool LobbyClient::ReadData(std::string& strData)
-{
-    uint32_t size = 0;
-    if (galaxy::api::Networking()->IsP2PPacketAvailable(&size))
-    {
-        char data[256] = {0};
-        uint32_t sizeOut = 0;
-        galaxy::api::GalaxyID outId;
-
-        if (galaxy::api::Networking()->ReadP2PPacket((void*)data, 256, &sizeOut, outId))
-        {
-            strData = std::string(data);
-            return true;
-        }
-    }
-
-    return false;
-}
-
-bool LobbyClient::SendData(const std::string& strData)
-{
-    return galaxy::api::Networking()->SendP2PPacket(m_enemyId,
-        (const void*)strData.c_str(), strData.size(), galaxy::api::P2PSendType::P2P_SEND_RELIABLE);
-}
-
 //
 // LobbyListListener
 //
