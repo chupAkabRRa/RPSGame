@@ -130,6 +130,59 @@ bool RPSNetwork::JoinLobby()
     return bRes;
 }
 
+bool RPSNetwork::SendOwnPick(common::ePick pick)
+{
+    std::string strData;
+
+    switch (pick)
+    {
+    case common::ePick::Paper:
+        strData = "paper";
+        break;
+
+    case common::ePick::Rock:
+        strData = "rock";
+        break;
+
+    case common::ePick::Scissors:
+        strData = "scissors";
+        break;
+
+    default:
+        strData = "none";
+        break;
+    }
+
+    if ((m_pHost && m_pHost->SendData(strData)) ||
+        (m_pClient && m_pClient->SendData(strData)))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+common::ePick RPSNetwork::GetEnemyPick()
+{
+    common::ePick result = common::ePick::None;
+    std::string strData;
+
+    if ((m_pHost && m_pHost->ReadData(strData) ||
+        (m_pClient && m_pClient->ReadData(strData))))
+    {
+        if (strData == "rock")
+            result = common::ePick::Rock;
+        else if (strData == "paper")
+            result = common::ePick::Paper;
+        else if (strData == "scissors")
+            result = common::ePick::Scissors;
+        else
+            result = common::ePick::None;
+    }
+
+    return result;
+}
+
 //
 // AuthListener
 //

@@ -10,6 +10,13 @@ namespace common
         Paper = 2,
         Scissors = 3
     };
+
+    class IPickProvider
+    {
+    public:
+        virtual ~IPickProvider() = default;
+        virtual common::ePick GetEnemyPick() = 0;
+    };
 }
 
 #endif // _RPS_COMMON_H_

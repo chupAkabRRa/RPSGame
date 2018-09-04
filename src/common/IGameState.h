@@ -11,14 +11,15 @@ public:
     {
         eState_Menu = 0,
         eState_GameStarted = 1,
-        eState_GameNewRound = 2,
-        eState_GameRoundFinished = 3,
-        eState_GameQuit = 4,
-        eState_LobbyCreating = 5,
-        eState_LobbyCreated = 6,
-        eState_LobbySearching = 7,
-        eState_LobbyFound = 8,
-        eState_LobbyConnecting = 9
+        eState_GameStartedOnline = 2,
+        eState_GameNewRound = 3,
+        eState_GameRoundFinished = 4,
+        eState_GameQuit = 5,
+        eState_LobbyCreating = 6,
+        eState_LobbyCreated = 7,
+        eState_LobbySearching = 8,
+        eState_LobbyFound = 9,
+        eState_LobbyConnecting = 10
     };
 
     virtual ~IGameState() = default;

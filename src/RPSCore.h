@@ -36,14 +36,14 @@ private:
     void JoinLobby();
 
     std::unique_ptr<RPSEngine> m_pEngine;
-    std::unique_ptr<RPSNetwork> m_pNetwork;
+    std::shared_ptr<RPSNetwork> m_pNetwork;
     bool m_bInitialized = false;
     bool m_bConnected = false;
 
     std::string m_strUserName;
 
     std::unique_ptr<GameLogic> m_pGameLogic;
-    GameBot m_bot;
+    std::shared_ptr<GameBot> m_pBot;
 };
 
 #endif // _RPD_CORE_H_

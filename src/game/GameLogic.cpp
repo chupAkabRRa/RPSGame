@@ -1,9 +1,14 @@
 #include "GameLogic.h"
 
-GameLogic::GameLogic(IPickProvider* pProvider, IGameState* cb)
+GameLogic::GameLogic(std::shared_ptr<common::IPickProvider> pProvider, IGameState* cb)
     : m_pPickProvider(pProvider)
     , m_pGameStateCb(cb)
 {}
+
+void GameLogic::UpdatePickProvider(std::shared_ptr<common::IPickProvider> pProvider)
+{
+    m_pPickProvider = pProvider;
+}
 
 void GameLogic::UpdateResults()
 {

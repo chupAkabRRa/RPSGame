@@ -6,12 +6,13 @@
 #include <memory>
 
 #include "IGameState.h"
+#include "RPSCommon.h"
 #include "gog/GalaxyApi.h"
 
 class LobbyHost;
 class LobbyClient;
 
-class RPSNetwork
+class RPSNetwork : public common::IPickProvider
 {
 public:
     RPSNetwork();
@@ -23,6 +24,10 @@ public:
     bool CreateLobby(const std::string& strLobbyName);
     bool SearchLobby(const std::string& strLobbyName);
     bool JoinLobby();
+
+    bool SendOwnPick(common::ePick pick);
+    // common::IPickProvider
+    common::ePick GetEnemyPick() override;
 
 private:
     class AuthListener : public galaxy::api::GlobalAuthListener

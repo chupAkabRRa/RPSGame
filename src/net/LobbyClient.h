@@ -17,6 +17,9 @@ public:
     void Initialize(IGameState* cb);
     void SearchLobby(const std::string& strLobbyName);
     void JoinLobby();
+
+    bool ReadData(std::string& strData);
+    bool SendData(const std::string& strData);
 private:
     class LobbyListListener : public galaxy::api::GlobalLobbyListListener
     {

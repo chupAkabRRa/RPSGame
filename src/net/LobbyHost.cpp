@@ -50,6 +50,31 @@ bool LobbyHost::LeaveLobbySync()
     return !m_bIsConnected;
 }
 
+bool LobbyHost::ReadData(std::string& strData)
+{
+    uint32_t size = 0;
+    if (galaxy::api::Networking()->IsP2PPacketAvailable(&size))
+    {
+        char data[256] = {0};
+        uint32_t sizeOut = 0;
+        galaxy::api::GalaxyID outId;
+
+        if (galaxy::api::Networking()->ReadP2PPacket((void*)data, 256, &sizeOut, outId))
+        {
+            strData = std::string(data);
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool LobbyHost::SendData(const std::string& strData)
+{
+    return galaxy::api::Networking()->SendP2PPacket(m_enemyId,
+        (const void*)strData.c_str(), strData.size(), galaxy::api::P2PSendType::P2P_SEND_RELIABLE);
+}
+
 //
 // LobbyCreateListener
 //
@@ -91,7 +116,7 @@ void LobbyHost::LobbyMembersListener::OnLobbyMemberStateChanged(const galaxy::ap
     if (state == galaxy::api::LobbyMemberStateChange::LOBBY_MEMBER_STATE_CHANGED_ENTERED)
     {
         m_pWrapper->m_enemyId = memberId;
-        m_pWrapper->m_pGameStateCb->OnStateChange(IGameState::eState::eState_GameStarted);
+        m_pWrapper->m_pGameStateCb->OnStateChange(IGameState::eState::eState_GameStartedOnline);
     }   
 }
 

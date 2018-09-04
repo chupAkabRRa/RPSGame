@@ -16,6 +16,9 @@ public:
 
     void Initialize(IGameState* cb);
     void CreateLobby(const std::string& strLobbyName);
+
+    bool ReadData(std::string& strData);
+    bool SendData(const std::string& strData);
 private:
     class LobbyCreateListener : public galaxy::api::GlobalLobbyCreatedListener
     {

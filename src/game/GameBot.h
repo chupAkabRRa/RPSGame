@@ -6,7 +6,7 @@
 #include "RPSCommon.h"
 #include "GameLogic.h"
 
-class GameBot : public GameLogic::IPickProvider
+class GameBot : public common::IPickProvider
 {
 public:
     GameBot() = default;

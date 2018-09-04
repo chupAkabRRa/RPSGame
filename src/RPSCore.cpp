@@ -26,7 +26,13 @@ void RPSCore::OnStateChange(IGameState::eState newState)
             m_pEngine->SetActiveScene(RPSEngine::eScene::eScene_Menu);
             break;
 
+        case IGameState::eState::eState_GameStartedOnline:
+            m_pGameLogic->UpdatePickProvider(m_pNetwork);
+            m_pEngine->SetActiveScene(RPSEngine::eScene::eScene_Game);
+            break;
+
         case IGameState::eState::eState_GameStarted:
+            m_pGameLogic->UpdatePickProvider(m_pBot);
             m_pEngine->SetActiveScene(RPSEngine::eScene::eScene_Game);
             break;
 
@@ -58,6 +64,7 @@ void RPSCore::OnStateChange(IGameState::eState newState)
 void RPSCore::OnPlayerPick(common::ePick pick)
 {
     m_pGameLogic->SetPlayerPick(pick);
+    m_pNetwork->SendOwnPick(pick);
 }
 
 void RPSCore::OnLobbyCreated(bool bResult)
@@ -99,10 +106,11 @@ bool RPSCore::Initialize(const std::string& strUser)
 {
     // Initialize render engine and network layer
     m_pEngine = std::make_unique<RPSEngine>();
-    m_pNetwork = std::make_unique<RPSNetwork>();
+    m_pNetwork = std::make_shared<RPSNetwork>();
+    m_pBot = std::make_shared<GameBot>();
     if (m_pEngine->Initialize(this) && m_pNetwork->Initialize(this))
     {
-        m_pGameLogic = std::make_unique<GameLogic>(&m_bot, this);
+        m_pGameLogic = std::make_unique<GameLogic>(m_pBot, this);
         m_pGameLogic->ResetState();
 
         LOG(INFO) << "Trying to connect " << strUser;
