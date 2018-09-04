@@ -31,7 +31,7 @@ public:
     virtual bool SendData(const std::string& strData) const
     {
         return galaxy::api::Networking()->SendP2PPacket(m_enemyId,
-            (const void*)strData.c_str(), strData.size(), galaxy::api::P2PSendType::P2P_SEND_RELIABLE);
+            (const void*)strData.c_str(), (uint32_t)strData.size(), galaxy::api::P2PSendType::P2P_SEND_RELIABLE);
     }
 
 protected:
